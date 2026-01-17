@@ -1,18 +1,24 @@
 {
-  "name": "chaibackend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "node.js app to deploy",
+  "description": "chai aur code backend course project ",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "npx nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Riteshkanara/backend.js.git"
   },
   "keywords": [
-    "node"
+    "js",
+    "node.js",
+    "exp.js"
   ],
-  "author": "Ritesh Kanara",
+  "author": "ritesh kanara",
   "license": "ISC",
-  "dependencies": {
-    "dotenv": "^17.2.3"
-  }
+  "bugs": {
+    "url": "https://github.com/Riteshkanara/backend.js/issues"
+  },
+  "homepage": "https://github.com/Riteshkanara/backend.js#readme"
 }
