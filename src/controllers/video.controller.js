@@ -110,15 +110,23 @@ const publishVideo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Description cannot be empty")
     }
 
+    // if(!videoFile){
+    //     throw new ApiError(400, "Video file is required")
+    // }
+    // if(!thumbnailFile){
+    //     throw new ApiError(400, "Thumbnail file is required")
+    // }
+
     const videoLocalPath = req.files?.videoFile?.[0].path
     const thumbnailLocalPath = req.files?.thumbnailFile?.[0].path
 
-    if(!videoFile){
+    if(!videoLocalPath){
         throw new ApiError(400, "Video file is required")
     }
-    if(!thumbnailFile){
+    if(!thumbnailLocalPath){
         throw new ApiError(400, "Thumbnail file is required")
     }
+
     const videoUpload = await uploadOnCloudinary(videoLocalPath, {resourceType: "video"})
     const thumbnailUpload = await uploadOnCloudinary(thumbnailLocalPath, {resourceType: "image"})
 
@@ -231,4 +239,46 @@ const getVideoById = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, video[0], "Video fetched successfully"));
 });
 
+const updateVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    //TODO: update video details like title, description, thumbnail
+
+    const {title,description} = req.body
+    const {thumbnailFile} = req.files || {}
+
+    if(title && title.trim().length === 0){
+        throw new ApiError(400, "Title cannot be empty")
+    }
+    if(description && description.trim().length === 0){
+        throw new ApiError(400, "Description cannot be empty")
+    }
+    
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new ApiError(404, "Video not found")
+    }
+    if(video.owner.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "You are not authorized to update this video")
+    }
+
+    const thumbnailLocalPath = req.files?.thumbnailFile?.[0].path
+    let thumbnailUpload ;
+    if(thumbnailLocalPath){
+        thumbnailUpload = await uploadOnCloudinary(thumbnailLocalPath, {resourceType: "image"})
+        if(!thumbnailUpload?.url){
+            throw new ApiError(500, "Thumbnail upload failed")
+        }
+    }
+    video.title = title || video.title
+    video.description = description || video.description
+    video.thumbnailFile = thumbnailUpload?.url || video.thumbnailFile
+
+    await video.save()
+
+    return res.status(200).json(
+        new ApiResponse(200, video, "Video updated successfully")
+    )
+
+
+})
 export { getAllVideos, publishVideo,getVideoById }
