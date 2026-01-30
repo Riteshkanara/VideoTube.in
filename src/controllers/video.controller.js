@@ -99,9 +99,136 @@ const getAllVideos = asyncHandler(async (req, res) => {
     );
 });
 
-const publishAVideo = asyncHandler(async (req, res) => {
+const publishVideo = asyncHandler(async (req, res) => {
     const { title, description} = req.body
     // TODO: get video, upload to cloudinary, create video
-})
 
-export { getAllVideos }
+    if(title.trim().length === 0){
+        throw new ApiError(400, "Title cannot be empty")
+    }
+    if(description.trim().length === 0){
+        throw new ApiError(400, "Description cannot be empty")
+    }
+
+    const videoLocalPath = req.files?.videoFile?.[0].path
+    const thumbnailLocalPath = req.files?.thumbnailFile?.[0].path
+
+    if(!videoFile){
+        throw new ApiError(400, "Video file is required")
+    }
+    if(!thumbnailFile){
+        throw new ApiError(400, "Thumbnail file is required")
+    }
+    const videoUpload = await uploadOnCloudinary(videoLocalPath, {resourceType: "video"})
+    const thumbnailUpload = await uploadOnCloudinary(thumbnailLocalPath, {resourceType: "image"})
+
+    if(!videoUpload?.url || !thumbnailUpload?.url){
+        throw new ApiError(500, "Video upload failed")
+    }
+
+    const newVideo = await Video.create({
+        title,
+        description,
+        videoFile: videoUpload.url,
+        thumbnailFile: thumbnailUpload.url,
+        duration: videoUpload.duration,
+        owner: req.user._id,
+        isPublished: true,
+      
+    })
+    const createdvideo = await Video.findById(newVideo._id).populate("owner", "username email avatar")
+    if(!createdvideo){
+        throw new ApiError(500, "Video creation failed")
+    }
+
+    return res.status(201).json(
+        new ApiResponse(
+            201,
+            newVideo,
+            "Video published successfully"
+            )
+    )
+}
+
+
+)
+
+const getVideoById = asyncHandler(async (req, res) => {
+    // Step 1: Extract and Validate videoId
+    const { videoId } = req.params;
+
+    if (!isValidObjectId(videoId)) {
+        throw new ApiError(400, "Invalid video ID format");
+    }
+
+    // Step 2-6: Build Aggregation Pipeline
+    const video = await Video.aggregate([
+        // Step 2: Match by videoId
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        // Step 3 & 4: Lookup Owner Details and their Subscribers
+        {
+            $lookup: {
+                from: "users", // ensure this matches your DB collection name (usually lowercase/plural)
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        // Step 4: Lookup subscribers for this specific owner
+                        $lookup: {
+                            from: "subscriptions",
+                            localField: "_id",
+                            foreignField: "channel",
+                            as: "subscribers"
+                        }
+                    },
+                    {
+                        $addFields: {
+                            subscribersCount: { $size: "$subscribers" },
+                            // Step 5: Check if current user is subscribed to this owner
+                            isSubscribed: {
+                                $cond: {
+                                    if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+                                    then: true,
+                                    else: false
+                                }
+                            }
+                        }
+                    },
+                    {
+                        // Project only the fields we want to expose
+                        $project: {
+                            username: 1,
+                            avatar: 1,
+                            subscribersCount: 1,
+                            isSubscribed: 1
+                        }
+                    }
+                ]
+            }
+        },
+        // Step 6: Clean up Owner Data (Convert array to object)
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner"
+                }
+            }
+        }
+    ]);
+
+    // Step 7: Execute and Handle Result
+    if (!video?.length) {
+        throw new ApiError(404, "Video does not exist");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, video[0], "Video fetched successfully"));
+});
+
+export { getAllVideos, publishVideo,getVideoById }

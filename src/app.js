@@ -23,5 +23,6 @@ import userRouter from "./routes/user.routes.js";
 // routes declaration 
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/videos", videoRouter);
   //these can be use as a prefix for routes(up)
 export {app}
