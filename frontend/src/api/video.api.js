@@ -2,13 +2,13 @@ import api from './axios.config';
 
 export const videoAPI = {
   // Get all videos
-  getAllVideos: async (params) => {
+  getAllVideos: async (params={}) => {
     const response = await api.get('/videos', { params });
-    console.log('Raw axios response:', response); // ← Debug
-    console.log('response.data:', response.data); // ← Debug
     
+    // console.log('Raw axios response:', response); // ← Debug
+    // console.log('response.data:', response.data); // ← Debug
     // ✅ FIX: Return just response.data (axios already unwraps it)
-    return response.data;
+    return response;
   },
 
   // Get single video

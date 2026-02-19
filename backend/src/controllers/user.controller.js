@@ -5,6 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { OAuth2Client } from 'google-auth-library'
+
 
 const generateAccessAndRefreshTokens = async(userId) => {
 
@@ -25,6 +27,60 @@ const generateAccessAndRefreshTokens = async(userId) => {
         
     }
 }
+
+// Google Authentication: 
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleAuth = async (req, res) => {
+    try {
+        const { token } = req.body;
+        
+        // 1. Verify the Google Token
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+
+        const { email, name, picture } = ticket.getPayload();
+
+        // 2. Find or Create User
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Generate a random username if they are new
+            const baseUsername = email.split('@')[0].toLowerCase();
+            user = await User.create({
+                fullName: name,
+                email,
+                avatar: picture,
+                username: `${baseUsername}${Math.floor(Math.random() * 1000)}`,
+                password: Math.random().toString(36).slice(-10), // Random password
+                isSocialLogin: true // Add this field to your model if you want to track it
+            });
+        }
+
+        // 3. Generate your App's JWT tokens
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        const options = { httpOnly: true, secure: true };
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json({
+                success: true,
+                user,
+                accessToken,
+                message: "Logged in with Google successfully"
+            });
+
+    } catch (error) {
+        res.status(401).json({ success: false, message: "Google verification failed" });
+    }
+};
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -345,11 +401,14 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
 })
 
 const getUserChannelProfile = asyncHandler(async(req, res) => {
-    const {username} = req.params
+    const { username } = req.params;
 
     if (!username?.trim()) {
         throw new ApiError(400, "username is missing")
     }
+
+    // ✅ Extract it BEFORE the pipeline so MongoDB can use it as a plain value
+    const currentUserId = req.user?._id;
 
     const channel = await User.aggregate([
         {
@@ -375,15 +434,12 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
         },
         {
             $addFields: {
-                subscribersCount: {
-                    $size: "$subscribers"
-                },
-                channelsSubscribedToCount: {
-                    $size: "$subscribedTo"
-                },
+                subscribersCount: { $size: "$subscribers" },
+                channelsSubscribedToCount: { $size: "$subscribedTo" },
                 isSubscribed: {
                     $cond: {
-                        if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                        // ✅ Use the variable, not req.user?._id
+                        if: { $in: [currentUserId, "$subscribers.subscriber"] },
                         then: true,
                         else: false
                     }
@@ -400,7 +456,6 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
                 avatar: 1,
                 coverImage: 1,
                 email: 1
-
             }
         }
     ])
@@ -411,9 +466,7 @@ const getUserChannelProfile = asyncHandler(async(req, res) => {
 
     return res
     .status(200)
-    .json(
-        new ApiResponse(200, channel[0], "User channel fetched successfully")
-    )
+    .json(new ApiResponse(200, channel[0], "User channel fetched successfully"))
 })
 
 const getWatchHistory = asyncHandler(async(req, res) => {

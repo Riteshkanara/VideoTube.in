@@ -33,6 +33,8 @@ const uploadOnCloudinary = async (localFilePath, options = {}) => {
         // Upload the file to Cloudinary
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto",
+            secure: true,
+            use_filename: true,
             ...options
         })
         

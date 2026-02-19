@@ -5,12 +5,18 @@ export const tweetAPI = {
     return await api.post('/tweets', { content });
   },
 
-  getUserTweets: async (params = {}) => {
-    return await api.get('/tweets', { params });
+  getAllTweets: async ( params = {} ) => {
+    return await api.get("/tweets",{ params })
   },
 
+  // 🌟 FIX 1: Add userId to the parameters and inject it into the URL string
+  getUserTweets: async (userId, params = {}) => {
+    return await api.get(`/tweets/${userId}`, { params });
+  },
+
+  // 🌟 FIX 2: Changed .patch to .put to match backend router.put
   updateTweet: async (tweetId, content) => {
-    return await api.patch(`/tweets/${tweetId}`, { content });
+    return await api.put(`/tweets/${tweetId}`, { content });
   },
 
   deleteTweet: async (tweetId) => {

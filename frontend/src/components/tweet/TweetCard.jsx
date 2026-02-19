@@ -10,7 +10,7 @@ export default function TweetCard({ tweet, onDelete, onEdit, onLike }) {
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(tweet.content);
-  const [liked, setLiked] = useState(false);
+  // 🌟 REMOVED: const [liked, setLiked] = useState(false);
   const { user } = useAuthStore();
 
   const isOwner = user?._id === tweet.owner?._id;
@@ -26,11 +26,6 @@ export default function TweetCard({ tweet, onDelete, onEdit, onLike }) {
       onDelete(tweet._id);
     }
     setShowMenu(false);
-  };
-
-  const handleLike = () => {
-    setLiked(!liked);
-    onLike(tweet._id);
   };
 
   return (
@@ -130,14 +125,15 @@ export default function TweetCard({ tweet, onDelete, onEdit, onLike }) {
                 {tweet.content}
               </p>
               
+              {/* 🌟 FIX: The Like button now reads directly from the tweet object */}
               <button
-                onClick={handleLike}
+                onClick={() => onLike(tweet._id)}
                 className={`flex items-center gap-2 text-sm transition-colors ${
-                  liked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                  tweet.isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
                 }`}
               >
-                <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
-                <span>{(tweet.likesCount || 0) + (liked ? 1 : 0)}</span>
+                <Heart size={18} fill={tweet.isLiked ? 'currentColor' : 'none'} />
+                <span>{tweet.likesCount || 0}</span>
               </button>
             </>
           )}

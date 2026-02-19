@@ -3,6 +3,7 @@ import Avatar from '../common/Avatar';
 import { formatDate } from '../../utils/formatDate';
 import { formatDuration } from '../../utils/formatDuration';
 import { formatViews } from '../../utils/formatViews';
+import {  optimizeCloudinaryUrl } from '../../utils/cloudinaryImage.js'
 
 export default function VideoCard({ video }) {
   return (
@@ -11,8 +12,10 @@ export default function VideoCard({ video }) {
         {/* Thumbnail with Hover Effect */}
         <div className="relative aspect-video bg-gradient-to-br from-dark-secondary to-dark-tertiary rounded-2xl overflow-hidden border border-gray-800 group-hover:border-gray-700 transition-all duration-300 group-hover:shadow-card-hover card-shine">
           <img
-            src={video.thumbnail}
+            src={optimizeCloudinaryUrl(video.thumbnail, 640)}
             alt={video.title}
+            width={640}
+            height={360}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             onError={(e) => {
               e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiMxQTFBMUEiLz48cGF0aCBkPSJNNTUwIDI4NUw3MzAgNDM1TDU1MCA1ODVWMjg1WiIgZmlsbD0iI0ZGMDAwMCIvPjwvc3ZnPg==';
@@ -64,7 +67,7 @@ export default function VideoCard({ video }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
-                {formatViews(video.views)}
+                {formatViews(video?.views || 0)} views
               </span>
               <span>•</span>
               <span>{formatDate(video.createdAt)}</span>

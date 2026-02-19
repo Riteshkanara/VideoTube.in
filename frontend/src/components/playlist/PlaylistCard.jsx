@@ -18,6 +18,8 @@ export default function PlaylistCard({ playlist }) {
               <img
                 src={firstVideo.thumbnail}
                 alt={playlist.name}
+                width={640}
+                height={360}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
               />
               {/* Overlay */}

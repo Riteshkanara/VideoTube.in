@@ -15,20 +15,72 @@ import Tweets from './pages/Tweets';
 import Channel from './pages/Channel';
 import Playlists from './pages/Playlists';
 import Subscriptions from './pages/Subscriptions';
+import PlaylistDetail from './components/playlist/PlaylistDetail.jsx';
 
 // Layout
 import Header from './components/common/Header';
 import Sidebar from './components/common/Sidebar';
 import Loader from './components/common/Loader';
+import ChannelPage from './pages/Channelpage.jsx';
 
-// Protected Route Component
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuthStore();
   return isAuthenticated ? children : <Navigate to="/login" />;
 }
 
-function App() {
+// ✅ THIS IS THE KEY COMPONENT — Layout wraps all pages properly
+function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {/* Header - fixed at top, full width */}
+      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Body row: sidebar + content side by side */}
+      <div style={{ display: 'flex', flex: 1, paddingTop: '64px' }}>
+
+        {/* ✅ Sidebar - fixed on desktop, slide-in on mobile */}
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        {/* ✅ Main content — pushed RIGHT of sidebar on desktop */}
+        {/* On mobile: full width (sidebar overlays on top, not pushes) */}
+        <main
+          style={{
+            flex: 1,
+            // On desktop (lg), push content 256px (sidebar width) from left
+            // This is done via className below
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            minHeight: 'calc(100vh - 64px)',
+            backgroundColor: '#0F0F0F',
+          }}
+          className="main-content"
+        >
+          <div className="page-wrapper">
+            {children}
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile overlay — clicking closes sidebar */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            zIndex: 30,
+            backdropFilter: 'blur(2px)',
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function App() {
   const [loading, setLoading] = useState(true);
   const { setUser } = useAuthStore();
 
@@ -39,99 +91,111 @@ function App() {
         try {
           const response = await authAPI.getCurrentUser();
           setUser(response.data);
-        } catch (error) {
-          console.error('Auth check failed:', error);
+        } catch {
           localStorage.removeItem('accessToken');
         }
       }
       setLoading(false);
     };
-
     checkAuth();
   }, [setUser]);
 
-  if (loading) {
-    return <Loader fullScreen />;
-  }
+  if (loading) return <Loader fullScreen />;
 
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-dark text-white">
         <Routes>
-          {/* Auth Routes (No Layout) */}
+          {/* Auth pages — NO sidebar/header layout */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* App Routes (With Layout) */}
-          <Route
-            path="/*"
-            element={
-              <>
-                <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-                <div className="flex pt-16">
-                  <Sidebar 
-                    isOpen={sidebarOpen} 
-                    onClose={() => setSidebarOpen(false)} 
-                  />
-                  <main className="flex-1 lg:ml-64 p-6">
-                    <Routes>
-                      {/* Public Routes */}
-                      <Route path="/" element={<Home />} />
-                      <Route path="/watch/:videoId" element={<VideoWatch />} />
-                      <Route path="/tweets" element={<Tweets />} />
-                      <Route path="/channel/:username" element={<Channel />} />
-                      
-                      {/* Protected Routes */}
-                      <Route 
-                        path="/upload" 
-                        element={
-                          <ProtectedRoute>
-                            <Upload />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/liked-videos" 
-                        element={
-                          <ProtectedRoute>
-                            <LikedVideos />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/playlists" 
-                        element={
-                          <ProtectedRoute>
-                            <Playlists />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/subscriptions" 
-                        element={
-                          <ProtectedRoute>
-                            <Subscriptions />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      
-                      {/* Fallback */}
-                      <Route path="*" element={<div className="text-center py-12">404 - Page Not Found</div>} />
-                    </Routes>
-                  </main>
-                </div>
-              </>
-            }
-          />
+          {/* All other pages — WITH sidebar/header layout */}
+          <Route path="/" element={
+            <Layout>
+              <Home />
+            </Layout>
+          } />
+
+          
+          <Route path="/playlist/:playlistId" element={
+  <Layout>
+    <PlaylistDetail />
+  </Layout>
+} />
+
+          
+          <Route path="/channel/:username" element={
+  <Layout>
+    <ChannelPage />
+  </Layout>
+} />
+
+          <Route path="/watch/:videoId" element={
+            <Layout>
+              <VideoWatch />
+            </Layout>
+          } />
+
+          <Route path="/tweets" element={
+            <Layout>
+              <Tweets />
+            </Layout>
+          } />
+
+          
+
+          <Route path="/upload" element={
+            <Layout>
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
+            </Layout>
+          } />
+
+          <Route path="/liked-videos" element={
+            <Layout>
+              <ProtectedRoute>
+                <LikedVideos />
+              </ProtectedRoute>
+            </Layout>
+          } />
+
+          <Route path="/playlists" element={
+            <Layout>
+              <ProtectedRoute>
+                <Playlists />
+              </ProtectedRoute>
+            </Layout>
+          } />
+
+          <Route path="/subscriptions" element={
+            <Layout>
+              <ProtectedRoute>
+                <Subscriptions />
+              </ProtectedRoute>
+            </Layout>
+          } />
+
+          {/* 404 */}
+          <Route path="*" element={
+            <Layout>
+              <div style={{
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                minHeight: '60vh', gap: 12
+              }}>
+                <h1 style={{ fontSize: 72, fontWeight: 900, color: '#1f1f1f' }}>404</h1>
+                <p style={{ color: '#666' }}>Page not found</p>
+              </div>
+            </Layout>
+          } />
         </Routes>
 
-        <Toaster 
+        <Toaster
           position="top-right"
           toastOptions={{
-            style: {
-              background: '#212121',
-              color: '#fff',
-            },
+            style: { background: '#212121', color: '#fff', border: '1px solid #333' },
           }}
         />
       </div>
@@ -140,18 +204,3 @@ function App() {
 }
 
 export default App;
-// ```
-
-// **Changes made:**
-// - ✅ Removed duplicate routes
-// - ✅ Fixed `import Tweets from './pages/Tweets'` (was lowercase)
-// - ✅ Organized routes cleanly
-// - ✅ Removed `isAuthenticated` from destructuring (unused)
-
-// ---
-
-// ## 📄 **Now Share index.html**
-
-// The polygon background is likely in `index.html`. Please share:
-// ```
-// index.html (in the root of frontend folder)

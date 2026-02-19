@@ -53,13 +53,13 @@ export default function CommentCard({ comment, onDelete, onEdit, onLike }) {
               rows="3"
             />
             <div className="flex gap-2">
-              <Button onClick={handleEdit} variant="primary" className="text-sm">
+              <Button onClick={handleEdit} variant="primary" className="px-6 py-2.5 rounded-lg font-bold border border-white/10">
                 Save
               </Button>
               <Button 
                 onClick={() => setIsEditing(false)} 
                 variant="secondary" 
-                className="text-sm"
+                className="px-6 py-2.5 rounded-lg font-bold border border-white/10"
               >
                 Cancel
               </Button>

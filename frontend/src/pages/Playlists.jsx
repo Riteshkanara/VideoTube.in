@@ -1,28 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, ListVideo } from 'lucide-react';
 import { playlistAPI } from '../api/playlist.api.js';
 import PlaylistCard from '../components/playlist/PlaylistCard';
-import Button from '../components/common/Button';
-import Input from '../components/common/Input';
 import Loader from '../components/common/Loader';
 import useAuthStore from '../store/auth.store.js';
 import toast from 'react-hot-toast';
+import CreatePlaylistModal from '../components/playlist/CreatePlaylistModal.jsx';
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-  });
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuthStore();
 
   useEffect(() => {
-    if (user?._id) {
-      loadPlaylists();
-    }
+    if (user?._id) loadPlaylists();
   }, [user]);
 
   const loadPlaylists = async () => {
@@ -30,115 +22,78 @@ export default function Playlists() {
       const response = await playlistAPI.getUserPlaylists(user._id);
       setPlaylists(response.data || []);
     } catch (error) {
-      console.error('Failed to load playlists:', error);
       toast.error('Failed to load playlists');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreatePlaylist = async (e) => {
-    e.preventDefault();
-    setSubmitLoading(true);
-
-    try {
-      const response = await playlistAPI.createPlaylist(formData);
-      setPlaylists([response.data, ...playlists]);
-      setShowCreateModal(false);
-      setFormData({ name: '', description: '' });
-      toast.success('Playlist created!');
-    } catch (error) {
-      console.error('Failed to create playlist:', error);
-      toast.error(error.message || 'Failed to create playlist');
-    } finally {
-      setSubmitLoading(false);
-    }
+  const handlePlaylistCreated = (newPlaylist) => {
+    setPlaylists([newPlaylist, ...playlists]);
   };
 
-  if (loading) {
-    return <Loader fullScreen />;
-  }
+  if (loading) return <Loader fullScreen />;
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Your Playlists</h1>
-        <Button
-          onClick={() => setShowCreateModal(true)}
-          variant="primary"
-          className="flex items-center gap-2"
-        >
-          <Plus size={20} />
-          <span>New Playlist</span>
-        </Button>
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
+      <div className="max-w-7xl mx-auto px-6 py-10">
+
+        {/* ── PAGE HEADER ── */}
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h1 className="text-2xl font-semibold text-white tracking-tight">
+              Your Playlists
+            </h1>
+            <p className="text-sm text-neutral-500 mt-1">
+              {playlists.length} {playlists.length === 1 ? 'collection' : 'collections'}
+            </p>
+          </div>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-neutral-200 transition-colors duration-200"
+          >
+            <Plus size={16} />
+            New Playlist
+          </button>
+        </div>
+
+        {/* ── DIVIDER ── */}
+        <div className="h-px bg-neutral-800 mb-10" />
+
+        {/* ── EMPTY STATE ── */}
+        {playlists.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-neutral-800 flex items-center justify-center mb-5">
+              <ListVideo size={28} className="text-neutral-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">No playlists yet</h2>
+            <p className="text-sm text-neutral-500 mb-6 max-w-xs">
+              Create your first playlist to start organizing videos you love.
+            </p>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-neutral-200 transition-colors"
+            >
+              <Plus size={16} />
+              Create Playlist
+            </button>
+          </div>
+        ) : (
+          /* ── GRID ── */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {playlists.map((playlist) => (
+              <PlaylistCard key={playlist._id} playlist={playlist} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {playlists.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-xl text-gray-400 mb-2">No playlists yet</p>
-          <p className="text-gray-500">Create your first playlist!</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {playlists.map((playlist) => (
-            <PlaylistCard key={playlist._id} playlist={playlist} />
-          ))}
-        </div>
-      )}
-
-      {/* Create Playlist Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-2 rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Create Playlist</h2>
-            
-            <form onSubmit={handleCreatePlaylist} className="space-y-4">
-              <Input
-                label="Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Playlist name"
-                required
-              />
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Description (optional)
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe your playlist"
-                  className="w-full p-3 bg-dark rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  rows="3"
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  type="submit"
-                  variant="primary"
-                  loading={submitLoading}
-                  className="flex-1"
-                >
-                  Create
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    setFormData({ name: '', description: '' });
-                  }}
-                  disabled={submitLoading}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CreatePlaylistModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handlePlaylistCreated}
+      />
     </div>
-  )
+  );
 }

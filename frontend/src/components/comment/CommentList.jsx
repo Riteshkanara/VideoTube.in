@@ -5,11 +5,14 @@ import CommentCard from './CommentCard';
 import CommentForm from './CommentForm';
 import Loader from '../common/Loader';
 import toast from 'react-hot-toast';
+import useAuthStore from '../../store/auth.store';
 
 export default function CommentList({ videoId }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     if (videoId) {
@@ -17,10 +20,16 @@ export default function CommentList({ videoId }) {
     }
   }, [videoId]);
 
-  const loadComments = async () => {
+const loadComments = async () => {
     try {
+      setLoading(true);
       const response = await commentAPI.getVideoComments(videoId);
-      setComments(response.data || []);
+      
+      // ✅ THE FIX: We must dig into the "data" object to find your comments
+      const fetchedComments = response?.data?.comments || [];
+      
+      setComments(fetchedComments); // Now it will correctly load your array!
+      
     } catch (error) {
       console.error('Failed to load comments:', error);
       toast.error('Failed to load comments');
@@ -30,14 +39,21 @@ export default function CommentList({ videoId }) {
   };
 
   const handleAddComment = async (content) => {
+    if(!isAuthenticated){
+      return  toast.error("Please login to comment")
+    }
+    if (!content.trim()) return;
     setSubmitLoading(true);
     try {
       const response = await commentAPI.addComment(videoId, content);
-      setComments([response.data, ...comments]);
+      
+      // FIX: Unpacking the new comment correctly
+      const newComment = response?.data || response;
+      setComments((prev) => [newComment, ...prev]);
       toast.success('Comment added!');
     } catch (error) {
-      console.error('Failed to add comment:', error);
-      toast.error(error.message || 'Failed to add comment');
+      const errorMessage = error?.response?.data?.message ||  'Failed to Add Comment.'
+      toast.error(errorMessage);
     } finally {
       setSubmitLoading(false);
     }
@@ -69,31 +85,43 @@ export default function CommentList({ videoId }) {
 
   const handleLikeComment = async (commentId) => {
     try {
+      // OPTIMISTIC UPDATE: Change the UI before the server responds
+      setComments(prev => prev.map(c => {
+        if (c._id === commentId) {
+          const isCurrentlyLiked = c.isLiked;
+          return {
+            ...c,
+            isLiked: !isCurrentlyLiked,
+            likesCount: isCurrentlyLiked ? c.likesCount - 1 : c.likesCount + 1
+          };
+        }
+        return c;
+      }));
+
       await likeAPI.toggleCommentLike(commentId);
-      // Optionally update like count in UI
-      toast.success('Comment liked!');
     } catch (error) {
       console.error('Failed to like comment:', error);
+      // Rollback on error if necessary (optional)
     }
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold mb-4">
-          {comments.length} Comments
+      <div className="border-t border-gray-800 pt-6">
+        <h2 className="text-xl font-bold mb-6">
+          {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
         </h2>
         <CommentForm onSubmit={handleAddComment} loading={submitLoading} />
       </div>
 
       {loading ? (
-        <Loader />
+        <div className="py-10"><Loader /></div>
       ) : comments.length === 0 ? (
-        <p className="text-center text-gray-400 py-8">
-          No comments yet. Be the first to comment!
-        </p>
+        <div className="text-center py-12 bg-dark-secondary rounded-xl border border-gray-800">
+          <p className="text-gray-400">No comments yet. Be the first to start the conversation!</p>
+        </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {comments.map((comment) => (
             <CommentCard
               key={comment._id}

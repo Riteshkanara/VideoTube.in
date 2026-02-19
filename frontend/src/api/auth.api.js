@@ -1,3 +1,4 @@
+import { GoogleLogin } from '@react-oauth/google';
 import api from './axios.config';
 
 export const authAPI = {
@@ -16,4 +17,9 @@ export const authAPI = {
   getCurrentUser: async () => {
     return await api.get('/users/current-user');
   },
+  GoogleLogin: async (token) => {
+      return await api.post('/users/google',  { token });
+      
+      
+  }
 };

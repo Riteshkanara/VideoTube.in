@@ -26,6 +26,7 @@ export const playlistAPI = {
   },
 
   removeVideoFromPlaylist: async (playlistId, videoId) => {
-    return await api.patch(`/playlists/remove/${playlistId}/${videoId}`);
-  },
+    return await api.patch(`/playlists/remove/${videoId}/${playlistId}`);
+},
+
 };

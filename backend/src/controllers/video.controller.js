@@ -4,11 +4,7 @@ import {User} from "../models/user.model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
-import { 
-    uploadOnCloudinary, 
-    deleteFromCloudinary,
-    extractPublicId 
-} from "../utils/cloudinary.js"
+import { uploadOnCloudinary,deleteFromCloudinary,extractPublicId } from "../utils/cloudinary.js"
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const {page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
@@ -21,13 +17,24 @@ const getAllVideos = asyncHandler(async (req, res) => {
     
     const skip = (pageNum - 1) * limitNum;
     
-    const matchConditions = { isPublished: true };
+    // 🌟 FIX 1: Start with an empty match object
+    const matchConditions = {};
     
     if (userId) {
         if(!isValidObjectId(userId)){
             throw new ApiError(400, "Invalid userId");
         }
         matchConditions.owner = new mongoose.Types.ObjectId(userId);
+        
+        // 🌟 FIX 2: The Smart Rule
+        // If the logged-in user is asking for their OWN videos, let them see everything.
+        // If it's a stranger (or a logged-out user), ONLY show published videos!
+        if (req.user?._id?.toString() !== userId) {
+            matchConditions.isPublished = true;
+        }
+    } else {
+        // If we are on the global Home Feed, ONLY show published videos
+        matchConditions.isPublished = true;
     }
 
     if (query) {
@@ -84,6 +91,12 @@ const publishVideo = asyncHandler(async (req, res) => {
     if(!videoUpload?.url || !thumbnailUpload?.url){
         throw new ApiError(500, "Video upload failed")
     }
+    if(videoUpload?.url){
+        videoUpload.url = videoUpload.url.replace("http://","https://")
+    }
+    if(thumbnailUpload?.url){
+        thumbnailUpload.url = thumbnailUpload.url.replace("http://","https://")
+    }
 
     // ✅ FIXED: Use consistent field names
     const newVideo = await Video.create({
@@ -114,12 +127,25 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid video ID format");
     }
 
+    await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
+
     const video = await Video.aggregate([
+        // 1. MATCH: Find the specific video first
         {
             $match: {
                 _id: new mongoose.Types.ObjectId(videoId)
             }
         },
+        // 2. LOOKUP LIKES: Check how many likes this video has
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "video",
+                as: "likes"
+            }
+        },
+        // 3. LOOKUP OWNER: Get the channel owner details and sub status
         {
             $lookup: {
                 from: "users",
@@ -138,6 +164,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                     {
                         $addFields: {
                             subscribersCount: { $size: "$subscribers" },
+                            // Is the CURRENT user in the subscribers list?
                             isSubscribed: {
                                 $cond: {
                                     if: { $in: [req.user?._id, "$subscribers.subscriber"] },
@@ -149,6 +176,7 @@ const getVideoById = asyncHandler(async (req, res) => {
                     },
                     {
                         $project: {
+                            fullName: 1,
                             username: 1,
                             avatar: 1,
                             subscribersCount: 1,
@@ -158,11 +186,25 @@ const getVideoById = asyncHandler(async (req, res) => {
                 ]
             }
         },
+        // 4. ADD FINAL FIELDS: Flatten the arrays and calculate top-level booleans
         {
             $addFields: {
-                owner: {
-                    $first: "$owner"
+                owner: { $first: "$owner" }, // Turns array of 1 into an object
+                likesCount: { $size: "$likes" }, // Total likes
+                // Is the CURRENT user in the likes list?
+                isLiked: {
+                    $cond: {
+                        if: { $in: [req.user?._id, "$likes.likedBy"] },
+                        then: true,
+                        else: false
+                    }
                 }
+            }
+        },
+        // 5. CLEAN UP: Remove the heavy arrays we don't need to send to frontend
+        {
+            $project: {
+                likes: 0 // We only need likesCount and isLiked, not the whole array
             }
         }
     ]);
@@ -171,8 +213,15 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Video does not exist");
     }
 
+    // 6. EXTRACT isSubscribed TO TOP LEVEL
+    // The frontend expects response.isSubscribed, but right now it's hiding inside response.owner.isSubscribed
+    const videoData = video[0];
+    
+    // Move isSubscribed to the root of the object for the frontend
+    videoData.isSubscribed = videoData.owner.isSubscribed;
+
     return res.status(200).json(
-        new ApiResponse(200, video[0], "Video fetched successfully")
+        new ApiResponse(200, videoData, "Video fetched successfully")
     );
 });
 

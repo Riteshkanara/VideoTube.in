@@ -1,22 +1,29 @@
-import ReactPlayer from 'react-player';
+export default function VideoPlayer({ src, thumbnail }) {
+  console.log('🎬 VideoPlayer rendering with:', src);
 
-export default function VideoPlayer({ url }) {
+  if (!src) {
+    return <div className="aspect-video bg-black rounded-lg" />;
+  }
+
   return (
     <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-      <ReactPlayer
-        url={url}
+      <video
+        key={src}
+        src={src}
+        poster={thumbnail}
         controls
-        width="100%"
-        height="100%"
-        playing={false}
-        config={{
-          file: {
-            attributes: {
-              controlsList: 'nodownload',
-            },
-          },
+        controlsList="nodownload"
+        className="w-full h-full object-contain"
+        preload="metadata"
+        onError={(e) => {
+          console.error('❌ Video error:', e);
+          console.error('Failed URL:', src);
         }}
-      />
+        onCanPlay={() => console.log('✅ Video can play!')}
+        onLoadedMetadata={() => console.log('✅ Video metadata loaded!')}
+      >
+        Your browser doesn't support HTML5 video.
+      </video>
     </div>
   );
 }

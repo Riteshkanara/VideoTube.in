@@ -23,20 +23,62 @@ const createTweet = asyncHandler(async (req, res) => {
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const { userId } = req.params;
+
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid userId");
+    }
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const tweets = await Tweet.find({
-        owner: userId
-    }).populate({
-        path: "owner",
-        select: "username fullName avatar"
-    }).sort({createdAt: -1})
-    .skip(skip)
-    .limit(limit)
-    .lean();
+    const loggedInUser = req.user?._id;
+
+    // 🌟 UPGRADE: Exact same pipeline, just added a $match at the top!
+    const tweets = await Tweet.aggregate([
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId)
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    { $project: { username: 1, fullName: 1, avatar: 1 } }
+                ]
+            }
+        },
+        { $unwind: "$owner" },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "tweet",
+                as: "likesData"
+            }
+        },
+        {
+            $addFields: {
+                likesCount: { $size: "$likesData" },
+                isLiked: {
+                    $cond: {
+                        if: { $in: [loggedInUser, "$likesData.likedBy"] },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        { $project: { likesData: 0 } },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit }
+    ]);
 
     return res.status(200).json(
         new ApiResponse(200, tweets, "User tweets fetched successfully")
@@ -100,9 +142,68 @@ const deleteTweet = asyncHandler(async (req, res) => {
     );
 });
 
+const getAllTweets = asyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const userId = req.user?._id;
+
+    // 🌟 UPGRADE: Replaced Tweet.find() with Aggregation Pipeline
+    const tweets = await Tweet.aggregate([
+        // 1. Get Owner Data
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    { $project: { username: 1, fullName: 1, avatar: 1 } }
+                ]
+            }
+        },
+        // 2. Flatten the owner array
+        { $unwind: "$owner" },
+        // 3. Get Likes Data
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "tweet",
+                as: "likesData"
+            }
+        },
+        // 4. Calculate likesCount and isLiked
+        {
+            $addFields: {
+                likesCount: { $size: "$likesData" },
+                isLiked: {
+                    $cond: {
+                        if: { $in: [userId, "$likesData.likedBy"] },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        // 5. Clean up
+        { $project: { likesData: 0 } },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit }
+    ]);
+
+    return res.status(200).json(
+        new ApiResponse(200, tweets, "All tweets fetched successfully")
+    );
+});
+
+
 export {
     createTweet,
     getUserTweets,
     updateTweet,
-    deleteTweet
+    deleteTweet,
+    getAllTweets
 }

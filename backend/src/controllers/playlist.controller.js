@@ -8,34 +8,36 @@ import {Video} from "../models/video.model.js"
 
 
 const createPlaylist = asyncHandler(async (req, res) => {
-    const {name, description} = req.body
-    //TODO: create playlist
+    // 🌟 1. Extract 'videos' array from the request body
+    const { name, description, videos } = req.body;
 
-    if(!name || name.trim() === ""){
-        throw new ApiError(400, "Playlist name cannot be empty");
+    if (!name || name.trim() === "") {
+        throw new ApiError(400, "Playlist name is required");
     }
 
-    //Not Needed because you are 
-    // const userId = req.user._id;
-    // if(!isValidObjectId(userId)){
-    //     throw new ApiError(401, "Unauthorized");
-    // }
+    // 🌟 2. Validate the videos array if it exists
+    let videoIds = [];
+    if (videos && Array.isArray(videos)) {
+        // Filter out any invalid ObjectIds to prevent crashes
+        videoIds = videos.filter(id => isValidObjectId(id));
+    }
 
+    // 🌟 3. Create the playlist WITH the videos
     const playlist = await Playlist.create({
         name,
-        description : description || "",
-        owner: req.user._id,
-        videos: []
+        description: description || "",
+        videos: videoIds, // Array of video IDs added instantly!
+        owner: req.user._id
+    });
 
-    },
-);
-
-    return res.status(201).json(new ApiResponse(
-        201,
-        playlist,
-        "Playlist created successfully"));
-
-})
+    if (!playlist) {
+        throw new ApiError(500, "Failed to create playlist");
+    }
+ 
+    return res.status(201).json(
+        new ApiResponse(201, playlist, "Playlist created successfully")
+    );
+}); 
 
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
@@ -78,15 +80,16 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     if(!isValidObjectId(playlistId)){
         throw new ApiError(400, "Invalid playlist ID");
     }
-    const playlist = await Playlist.findById(playlistId).populate({
+    const playlist = await Playlist.findById(playlistId)
+    .populate({
         path: "videos",
-        select: "title duration thumbnail",
-        populate:{
+        select: "title thumbnail duration views createdAt owner", // 🌟 Ensure 'views' is here
+        populate: {
             path: "owner",
-            select: "username avatar"
+            select: "username fullName avatar"
         }
-    }).populate({ "path": "owner", "select": "username avatar"})
-    .lean();
+    })
+    .populate("owner", "username fullName avatar");
 
     if(!playlist){
         throw new ApiError(404, "Playlist not found");

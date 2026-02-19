@@ -1,3 +1,5 @@
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryImage.js'
+
 export default function Avatar({ src, alt, size = 'md' }) {
   const sizes = {
     sm: 'w-8 h-8 min-w-[32px] min-h-[32px]',
@@ -27,12 +29,12 @@ export default function Avatar({ src, alt, size = 'md' }) {
     >
       {src ? (
         <img 
-          src={src} 
+          src={ optimizeCloudinaryUrl(src, 150)} 
           alt={alt || 'Avatar'} 
+          width={100}
+          height={100}
           className="w-full h-full object-cover"
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
             display: 'block',
           }}

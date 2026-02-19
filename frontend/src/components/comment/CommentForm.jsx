@@ -47,7 +47,7 @@ export default function CommentForm({ onSubmit, loading }) {
             onClick={() => setContent('')}
             variant="secondary"
             disabled={!content.trim()}
-            className="text-sm"
+            className="px-6 py-2.5 rounded-lg font-bold border border-white/10"
           >
             Cancel
           </Button>
@@ -56,7 +56,7 @@ export default function CommentForm({ onSubmit, loading }) {
             variant="primary"
             disabled={!content.trim()}
             loading={loading}
-            className="text-sm"
+            className="px-6 py-2.5 rounded-lg font-bold border border-white/10"
           >
             Comment
           </Button>
