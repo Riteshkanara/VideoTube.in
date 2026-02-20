@@ -21,6 +21,15 @@
 
 [✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [🛠️ Tech Stack](#️-tech-stack) • [📸 Screenshots](#-screenshots) • [🎯 Roadmap](#-roadmap)
 
+
+### **Access the App**
+
+Open your browser and navigate to:
+- **Frontend:** https://video-tube-in-final.vercel.app/
+- FRONTEND IN Vercel
+- **Backend API:** https://videotube-production.up.railway.app/api/v1
+- BACKEND IN Railway
+
 <br />
 
 ---
@@ -159,13 +168,8 @@ CORS_ORIGIN=http://localhost:5173
 VITE_API_URL=http://localhost:8000/api/v1
 ```
 
-### **Access the App**
 
-Open your browser and navigate to:
-- **Frontend:** https://video-tube-in-final.vercel.app/
-- FRONTEND IN Vercel
-- **Backend API:** https://videotube-production.up.railway.app/api/v1
-- BACKEND IN Railway
+
 
 <br />
 
