@@ -29,9 +29,9 @@ export default function ChannelPage() {
 
       // 1. Get channel profile by username
       const profileRes = await api.get(`/users/user-channel/${username}`);
-      console.log('FULL profile response:', profileRes)
-      console.log('channel response:', profileRes);  // 👈 add this
-      console.log('username from URL:', username);
+      
+      
+      
       const channelData = profileRes?.data || profileRes;
       setChannel(channelData);
       setIsSubscribed(channelData?.isSubscribed || false);

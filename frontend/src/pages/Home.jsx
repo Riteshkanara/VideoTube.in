@@ -19,7 +19,7 @@ export default function Home() {
       const videoData = response?.data?.docs || response?.data?.videos || [];
       setVideos(videoData);
 
-      // console.log('video response:', response); 
+      // 
       //To really check the the data format to display the video.
       
       

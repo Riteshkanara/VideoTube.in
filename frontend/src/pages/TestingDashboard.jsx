@@ -403,7 +403,7 @@ const phases = [
       {
         name: "🧹 Code Cleanup",
         steps: [
-          { text: "Remove ALL console.log() debug statements from code" },
+          { text: "Remove ALL 
           { text: "Remove TestingDashboard route from App.jsx" },
           { text: "Remove any hardcoded localhost:8000 URLs from frontend" },
           { text: "No API keys or secrets hardcoded anywhere in frontend" },
