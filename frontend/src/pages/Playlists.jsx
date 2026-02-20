@@ -5,10 +5,7 @@ import PlaylistCard from '../components/playlist/PlaylistCard';
 import Loader from '../components/common/Loader';
 import useAuthStore from '../store/auth.store.js';
 import toast from 'react-hot-toast';
-import CreatePlaylistModal from '<div styleName={} />
-<components />
-<playlist />
-<!--  -->reatePlaylistModal.jsx';
+import CreatePlaylistModal from '../components/playlist/createPlaylistModal.jsx'
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState([]);
