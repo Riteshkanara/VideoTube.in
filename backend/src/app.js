@@ -12,11 +12,7 @@ const allowedOrigins = [
     process.env.CORS_ORIGIN,
 ].filter(Boolean); // removes undefined values
 
-// Remove this:
-app.options(/(.*)/, cors());
-
-// Add this instead (uses your full config for preflight too):
-app.options("*", cors({
+app.options(/(.*)/, cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
