@@ -12,13 +12,15 @@ const allowedOrigins = [
     process.env.CORS_ORIGIN,
 ].filter(Boolean); // removes undefined values
 
-app.use(cors({
+// Remove this:
+app.options(/(.*)/, cors());
+
+// Add this instead (uses your full config for preflight too):
+app.options("*", cors({
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps, curl, Postman)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            console.log("CORS blocked origin:", origin); // helpful for debugging
             callback(new Error("Not allowed by CORS: " + origin));
         }
     },
@@ -26,9 +28,6 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
 }));
-
-// Handle preflight for all routes
-app.options(/(.*)/, cors());
 
 app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
