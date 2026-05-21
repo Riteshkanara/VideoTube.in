@@ -12,7 +12,7 @@ const allowedOrigins = [
     process.env.CORS_ORIGIN,
 ].filter(Boolean); // removes undefined values
 
-app.options(/(.*)/, cors({
+app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -24,6 +24,8 @@ app.options(/(.*)/, cors({
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
 }));
+
+// NO app.options line needed
 
 app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
