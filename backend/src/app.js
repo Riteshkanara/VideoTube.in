@@ -5,9 +5,10 @@ import cookieParser from "cookie-parser";
 const app = express();  // ← ONLY ONCE
 
 const allowedOrigins = [
-    'https://video-tube-in-final.vercel.app',
-    'http://localhost:5173',
-]
+  'https://video-tube-in-final.vercel.app',  // your existing Vercel URL
+  'http://localhost:5173',                    // add this
+  'http://localhost:4173',                    // optional: for npm run preview
+];
 
 app.use(cors({
     origin: function(origin, callback) {
