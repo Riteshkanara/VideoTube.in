@@ -4,26 +4,21 @@ import cookieParser from "cookie-parser";
 
 const app = express();  // ← ONLY ONCE
 
-// CORS - must be first
 const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:5175",
-    "https://video-tube-in-final.vercel.app",
-    process.env.CORS_ORIGIN,
-].filter(Boolean); // removes undefined values
+    'https://video-tube-in-final.vercel.app',
+    'http://localhost:5173',
+]
 
 app.use(cors({
-    origin: function (origin, callback) {
+    origin: function(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
+            callback(null, true)
         } else {
-            callback(new Error("Not allowed by CORS: " + origin));
+            callback(new Error('Not allowed by CORS'))
         }
     },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
-}));
+    credentials: true
+}))
 
 // NO app.options line needed
 
