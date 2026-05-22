@@ -2,435 +2,420 @@
 
 # 🎬 VideoTube
 
-### *A Modern Video Sharing Platform Built from Scratch*
+### *A Modern Full-Stack Video Sharing Platform*
 
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
-[![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com)
-[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-
-[![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com)
-[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Clapper%20Board.png" width="90" />
 
 <br />
 
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Clapper%20Board.png" width="100" height="100" />
-
-**A full-stack YouTube clone with modern architecture, sleek UI, and production-ready features**
-
-[✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [🛠️ Tech Stack](#️-tech-stack) • [📸 Screenshots](#-screenshots) • [🎯 Roadmap](#-roadmap)
+> A production-inspired video streaming and creator platform built using the MERN stack with modern UI/UX, scalable architecture, secure authentication, and real-world full-stack engineering practices.
 
 <br />
 
----
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-20232A?style=for-the-badge&logo=node.js&logoColor=339933)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/Express-20232A?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-20232A?style=for-the-badge&logo=mongodb&logoColor=47A248)](https://mongodb.com)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-20232A?style=for-the-badge&logo=tailwind-css&logoColor=06B6D4)](https://tailwindcss.com)
+[![JWT](https://img.shields.io/badge/JWT-20232A?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-20232A?style=for-the-badge&logo=cloudinary&logoColor=3448C5)](https://cloudinary.com)
+
+<br />
+
+### 🌐 Live Demo
+
+[🚀 Visit VideoTube](https://video-tube-in-final.vercel.app)
+
+<br />
+
+[✨ Features](#-features) •
+[🛠️ Tech Stack](#️-tech-stack) •
+[📸 Screenshots](#-screenshots) •
+[🚀 Getting Started](#-getting-started) •
+[🎯 Future Improvements](#-future-improvements)
 
 </div>
 
-## 📖 **About The Project**
+---
 
-VideoTube is a **feature-rich video sharing platform** inspired by YouTube, built entirely from scratch using the MERN stack. This project demonstrates modern web development practices, clean architecture, and a pixel-perfect user interface.
+# 📖 About The Project
 
-### **🎯 What Makes This Special?**
+VideoTube is a **modern full-stack video sharing platform** inspired by platforms like YouTube and X (Twitter), designed and developed completely from scratch using the **MERN stack**.
 
-- 🎨 **Production-Quality UI** — Glassmorphism, smooth animations, and responsive design
-- 🔐 **Secure Authentication** — JWT with refresh tokens, bcrypt password hashing
-- ☁️ **Cloud Storage** — Cloudinary integration for videos and images
-- 💾 **Robust Backend** — RESTful API with proper error handling and validation
-- 📱 **Fully Responsive** — Works flawlessly on mobile, tablet, and desktop
-- 🧪 **Testing Phase** — Currently in development with active feature additions
+The goal of this project was not just to clone an existing platform, but to build a **production-style application** that demonstrates:
 
-<br />
+- scalable frontend architecture
+- clean backend engineering
+- secure authentication flows
+- media handling pipelines
+- responsive UI/UX design
+- reusable component systems
+- modern developer practices
+
+This project helped me understand how real-world content platforms work internally — from authentication and media uploads to state management and optimized frontend rendering.
 
 ---
 
-## ✨ **Features**
+# ✨ Features
 
-<table>
-<tr>
-<td width="50%">
+## 🎬 Video Platform
 
-### 🎬 **Video Management**
-- ✅ Upload videos with thumbnails
-- ✅ HD video streaming
-- ✅ Video player with full controls
-- ✅ View count tracking
-- ✅ Video descriptions & metadata
-
-</td>
-<td width="50%">
-
-### 👤 **User System**
-- ✅ Register with avatar & cover image
-- ✅ Secure login/logout
-- ✅ JWT authentication
-- ✅ User profiles & channels
-- ✅ Session management
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 💬 **Social Features**
-- ✅ Like/Unlike videos
-- ✅ Subscribe to channels
-- ✅ Comment system
-- ✅ Tweet-style posts
-- ✅ Playlist creation
-
-</td>
-<td width="50%">
-
-### 🎨 **Modern UI/UX**
-- ✅ Dark mode design
-- ✅ Glassmorphism effects
-- ✅ Smooth animations
-- ✅ Loading states
-- ✅ Toast notifications
-
-</td>
-</tr>
-</table>
-
-<br />
+- Upload videos with thumbnails
+- HD video playback
+- Video metadata management
+- Dynamic watch pages
+- Like / unlike videos
+- Subscribe to creators
+- Responsive video layouts
+- View count tracking
+- Creator channel pages
 
 ---
 
-## 🚀 **Quick Start**
+## 💬 Community Features
 
-### **Prerequisites**
+- Tweet-style community posts
+- Like interactions
+- Social feed system
+- Creator engagement features
 
-Make sure you have these installed:
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- [MongoDB](https://www.mongodb.com/) (running locally or Atlas)
-- [Cloudinary Account](https://cloudinary.com/) (for media storage)
+---
 
-### **Installation**
+## 🔐 Authentication & Security
+
+- JWT Authentication
+- Refresh & Access Tokens
+- Protected Routes
+- Secure Password Hashing
+- Persistent Login Sessions
+- Cookie-based authentication
+
+---
+
+## 🎨 Modern UI / UX
+
+- Premium dark interface
+- Responsive layouts
+- Smooth hover interactions
+- Reusable UI components
+- Sidebar navigation system
+- Modern typography & spacing
+- Mobile-friendly experience
+
+---
+
+# 🛠️ Tech Stack
+
+<div align="center">
+
+## Frontend
+
+<img src="https://skillicons.dev/icons?i=react,vite,tailwind,javascript" />
+
+</div>
+
+| Technology | Usage |
+|------------|-------|
+| React.js | Frontend library |
+| Vite | Fast build tool |
+| Tailwind CSS | UI styling |
+| Zustand | State management |
+| React Router DOM | Routing |
+| Axios | API requests |
+| React Hot Toast | Notifications |
+
+---
+
+<div align="center">
+
+## Backend
+
+<img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
+
+</div>
+
+| Technology | Usage |
+|------------|-------|
+| Node.js | Runtime environment |
+| Express.js | Backend framework |
+| MongoDB | Database |
+| Mongoose | ODM |
+| JWT | Authentication |
+| Bcrypt | Password hashing |
+| Multer | File uploads |
+| Cloudinary | Media storage |
+
+---
+
+# 📸 Screenshots
+
+## 🏠 Homepage
+
+Modern responsive homepage with dynamic content layout.
+
+<img width="100%" src="YOUR_SCREENSHOT_URL_HERE" />
+
+---
+
+## 🎬 Watch Page
+
+Interactive video player with creator information and engagement actions.
+
+<img width="100%" src="YOUR_SCREENSHOT_URL_HERE" />
+
+---
+
+## 📤 Upload Interface
+
+Drag-and-drop inspired upload experience with thumbnail support.
+
+<img width="100%" src="YOUR_SCREENSHOT_URL_HERE" />
+
+---
+
+## 👤 Channel Page
+
+Dedicated creator profile page with video management structure.
+
+<img width="100%" src="YOUR_SCREENSHOT_URL_HERE" />
+
+---
+
+## 💬 Tweets / Community
+
+Social engagement section inspired by creator communities.
+
+<img width="100%" src="YOUR_SCREENSHOT_URL_HERE" />
+
+---
+
+# 🧠 System Design & Architecture
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/videotube.git
-cd videotube
-
-# 2. Install backend dependencies
-cd backend
-npm install
-
-# 3. Install frontend dependencies
-cd ../frontend
-npm install
-
-# 4. Set up environment variables
-# Create .env files in both backend and frontend folders (see below)
-
-# 5. Start MongoDB (if running locally)
-mongod
-
-# 6. Start the backend server
-cd backend
-npm run dev
-
-# 7. Start the frontend (in a new terminal)
-cd frontend
-npm run dev
+VideoTube/
+│
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── api/
+│   ├── store/
+│   ├── hooks/
+│   └── utils/
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middlewares/
+│   ├── utils/
+│   └── database/
+│
+└── README.md
 ```
 
-### **Environment Variables**
+---
 
-**Backend** (`.env` in `backend/` folder):
+# 🚀 Getting Started
+
+## Prerequisites
+
+Make sure the following are installed:
+
+- Node.js (v16+)
+- MongoDB
+- Cloudinary Account
+
+---
+
+# ⚙️ Installation
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/your-username/videotube.git
+cd videotube
+```
+
+---
+
+## 2. Install Dependencies
+
+### Backend
+
+```bash
+cd backend
+npm install
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+## 3. Configure Environment Variables
+
+### Backend `.env`
+
 ```env
 PORT=8000
-MONGODB_URI=mongodb://localhost:27017/videotube
-ACCESS_TOKEN_SECRET=your_super_secret_key_here_32_chars_min
-REFRESH_TOKEN_SECRET=another_super_secret_key_here_32_chars_min
+
+MONGODB_URI=your_mongodb_uri
+
+ACCESS_TOKEN_SECRET=your_access_secret
+REFRESH_TOKEN_SECRET=your_refresh_secret
+
 ACCESS_TOKEN_EXPIRY=1d
 REFRESH_TOKEN_EXPIRY=10d
 
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
 CORS_ORIGIN=http://localhost:5173
 ```
 
-**Frontend** (`.env` in `frontend/` folder):
+---
+
+### Frontend `.env`
+
 ```env
 VITE_API_URL=http://localhost:8000/api/v1
 ```
 
-### **Access the App**
-
-Open your browser and navigate to:
-- **Frontend:** http://localhost:5173
-- **Backend API:** http://localhost:8000/api/v1
-
-<br />
-
 ---
 
-## 🛠️ **Tech Stack**
+## 4. Run The Project
 
-<div align="center">
+### Start Backend
 
-### **Frontend**
-
-<img src="https://skillicons.dev/icons?i=react,vite,tailwind,javascript" />
-
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | UI library with hooks |
-| **Vite** | Lightning-fast build tool |
-| **TailwindCSS** | Utility-first styling |
-| **Zustand** | State management |
-| **React Router** | Navigation |
-| **Axios** | HTTP client |
-| **React Hot Toast** | Notifications |
-
-### **Backend**
-
-<img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
-
-| Technology | Purpose |
-|------------|---------|
-| **Node.js** | JavaScript runtime |
-| **Express.js** | Web framework |
-| **MongoDB** | NoSQL database |
-| **Mongoose** | ODM for MongoDB |
-| **JWT** | Authentication |
-| **Bcrypt** | Password hashing |
-| **Cloudinary** | Media storage |
-| **Multer** | File uploads |
-
-</div>
-
-<br />
-
----
-
-## 📁 **Project Structure**
-
-```
-videotube/
-├── 📂 backend/
-│   ├── 📂 src/
-│   │   ├── 📂 controllers/     # Business logic
-│   │   ├── 📂 models/          # Database schemas
-│   │   ├── 📂 routes/          # API endpoints
-│   │   ├── 📂 middlewares/     # Auth, validation
-│   │   ├── 📂 utils/           # Helpers, cloudinary
-│   │   └── 📄 index.js         # Entry point
-│   ├── 📄 .env                 # Environment variables
-│   └── 📄 package.json
-│
-├── 📂 frontend/
-│   ├── 📂 src/
-│   │   ├── 📂 api/             # API calls
-│   │   ├── 📂 components/      # React components
-│   │   ├── 📂 pages/           # Page components
-│   │   ├── 📂 store/           # Zustand stores
-│   │   ├── 📂 utils/           # Helpers
-│   │   ├── 📄 App.jsx          # Main app
-│   │   └── 📄 main.jsx         # Entry point
-│   ├── 📄 .env                 # Environment variables
-│   ├── 📄 index.html
-│   ├── 📄 tailwind.config.js
-│   └── 📄 package.json
-│
-└── 📄 README.md
+```bash
+npm run dev
 ```
 
-<br />
+### Start Frontend
+
+```bash
+npm run dev
+```
 
 ---
 
-## 📸 **Screenshots**
+# 🎯 Future Improvements
+
+- Advanced search functionality
+- AI-powered recommendations
+- Real-time notifications
+- Video comments replies
+- Live streaming
+- Playlist improvements
+- Watch history optimization
+- Analytics dashboard
+- Mobile application
+- Video transcoding & quality selection
+
+---
+
+# 🎓 Key Learnings
+
+Building VideoTube helped me strengthen my understanding of:
+
+## Frontend Engineering
+
+- Component architecture
+- Responsive UI design
+- State management
+- API integration
+- Modern React patterns
+
+---
+
+## Backend Engineering
+
+- REST API architecture
+- JWT authentication systems
+- Secure route handling
+- File upload pipelines
+- Database schema design
+
+---
+
+## Full Stack Development
+
+- End-to-end application flow
+- Deployment workflows
+- Cloud media handling
+- Production-style architecture
+- Error handling & validation
+
+---
+
+# 🐛 Known Limitations
+
+- Search functionality is currently being improved
+- Video transcoding is not implemented yet
+- Advanced recommendation system pending
+- Reply threads for comments not added yet
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+```bash
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+```
+
+---
+
+# 👨‍💻 Developer
 
 <div align="center">
 
-### 🏠 **Homepage**
-*Browse trending videos with a modern, responsive grid layout*
+# Ritesh Kanara
 
-<img src="https://via.placeholder.com/800x450/0f0f0f/ff0000?text=Homepage+Screenshot" alt="Homepage" />
+### Full Stack Developer
 
----
+Passionate about building scalable web applications, modern UI systems, and production-level full-stack projects.
 
-### 🎬 **Video Player**
-*HD video streaming with like, subscribe, and comment features*
+<br />
 
-<img src="https://via.placeholder.com/800x450/0f0f0f/ff0000?text=Video+Player+Screenshot" alt="Video Player" />
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github)](https://github.com/Riteshkanara)
 
----
-
-### 👤 **User Profile**
-*Personalized channel page with uploaded videos and statistics*
-
-<img src="https://via.placeholder.com/800x450/0f0f0f/ff0000?text=Profile+Screenshot" alt="Profile" />
-
----
-
-### 📤 **Upload Interface**
-*Drag-and-drop video upload with thumbnail preview*
-
-<img src="https://via.placeholder.com/800x450/0f0f0f/ff0000?text=Upload+Screenshot" alt="Upload" />
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ritesh-kanara-ahir-966677244)
 
 </div>
 
-> **Note:** *Replace placeholder images with actual screenshots when available*
+---
 
-<br />
+# ⭐ Support
+
+If you liked this project:
+
+- Star the repository
+- Share feedback
+- Fork and improve it
 
 ---
 
-## 🎯 **Roadmap**
+# 📜 License
 
-### ✅ **Completed**
-- [x] User authentication (Register, Login, Logout)
-- [x] Video upload with Cloudinary
-- [x] Video player with controls
-- [x] Like/Unlike functionality
-- [x] Subscribe/Unsubscribe to channels
-- [x] Comment system
-- [x] Responsive UI design
-- [x] Dark theme with glassmorphism
-
-### 🚧 **In Progress**
-- [ ] Video search functionality
-- [ ] Related videos sidebar
-- [ ] Watch history
-- [ ] Playlist management improvements
-- [ ] Tweet system completion
-
-### 🔮 **Future Enhancements**
-- [ ] Video recommendations algorithm
-- [ ] Live streaming support
-- [ ] Video editing in-browser
-- [ ] Multi-language support
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Video quality selection (360p, 720p, 1080p)
-- [ ] Subtitle support
-- [ ] Community posts
-- [ ] Channel verification badges
-
-<br />
-
----
-
-## 🎓 **What I Learned**
-
-Building VideoTube was an incredible learning experience. Here are the key takeaways:
-
-<table>
-<tr>
-<td width="50%">
-
-### 🔧 **Technical Skills**
-- RESTful API design patterns
-- JWT authentication flows
-- File upload handling with Multer
-- Cloud storage integration (Cloudinary)
-- MongoDB aggregation pipelines
-- React state management (Zustand)
-- Responsive design with Tailwind
-
-</td>
-<td width="50%">
-
-### 💡 **Best Practices**
-- Clean code architecture (MVC)
-- Error handling strategies
-- Security best practices (bcrypt, JWT)
-- API rate limiting
-- CORS configuration
-- Environment variable management
-- Git workflow and version control
-
-</td>
-</tr>
-</table>
-
-<br />
-
----
-
-## 🐛 **Known Issues**
-
-- ⚠️ Video transcoding not implemented (uploads as-is)
-- ⚠️ Search functionality in development
-- ⚠️ No video quality selection yet
-- ⚠️ Comment replies not implemented
-
-*Actively working on fixes! Check the [Issues](https://github.com/Riteshkanara/videotube/issues) page.*
-
-<br />
-
----
-
-## 🤝 **Contributing**
-
-Contributions are welcome! Here's how you can help:
-
-1. 🍴 Fork the repository
-2. 🌿 Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. 💾 Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. 📤 Push to the branch (`git push origin feature/AmazingFeature`)
-5. 🔃 Open a Pull Request
-
-<br />
-
----
-
-## 📝 **License**
-
-This project is for **educational and portfolio purposes only**.
-
-<br />
-
----
-
-## 👨‍💻 **Developer**
-
-<div align="center">
-
-### ** Ritesh Kanara **
-
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Riteshkanara)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ritesh-kanara-ahir-966677244/)
-[![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://yourportfolio.com)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](riteshkanara7777@gmail.com)
-
-**💼 Open to work | 🌟 Let's connect!**
-
-</div>
-
-<br />
-
----
-
-## 🙏 **Acknowledgments**
-
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [React Documentation](https://react.dev/)
-- [Cloudinary](https://cloudinary.com/) for media storage
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- Inspired by [YouTube](https://youtube.com/)
-- Icons from [Lucide React](https://lucide.dev/)
-
-<br />
+This project is licensed under the MIT License.
 
 ---
 
 <div align="center">
 
-### ⭐ **If you found this project helpful, please give it a star!** ⭐
+### ⭐ Thank You For Visiting ⭐
 
-<br />
-
-**Made with ❤️ and ☕ by Ritesh Kanara **
-
-<br />
-
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand.png" width="50" />
+Built with passion, curiosity, and lots of debugging ☕
 
 </div>
