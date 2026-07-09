@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" />
 </p>
 
-### 🚀 [**View Live Demo →**](https://video-tube-in-final.vercel.app)
+### 🎬 [**View Live Demo →**](https://videotube-riteshkanara.vercel.app/)
 
 <br/>
 
