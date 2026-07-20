@@ -4,14 +4,15 @@ import cookieParser from "cookie-parser";
 
 const app = express();  // ← ONLY ONCE
 
-const allowedOrigins = [
-  'https://video-tube-in-final.vercel.app', 
-  'https://videotube-riteshkanara.vercel.app',// your existing Vercel URL
-  'http://localhost:5173',                    // add this
-  'http://localhost:4173',                    // optional: for npm run preview
-];
 
-app.use(cors({
+const allowedOrigins = [
+  'https://video-tube-in-final.vercel.app',
+  'https://videotube-riteshkanara.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:4173',
+]
+
+const corsOptions = {
     origin: function(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true)
@@ -20,7 +21,10 @@ app.use(cors({
         }
     },
     credentials: true
-}))
+}
+
+app.use(cors(corsOptions))
+app.options("*", cors(corsOptions))   // ✅ fixes preflight on mobile upload
 
 // NO app.options line needed
 
