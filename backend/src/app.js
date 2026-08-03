@@ -56,4 +56,34 @@ app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use("/api/v1/healthcheck", healthcheck);
 app.use("/api/v1/dashboard", dashboardRouter);
 
+// ---- Global error handler (must be last, after all routes) ----
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+            return res.status(413).json({
+                success: false,
+                message: "File is too large. Max allowed size is 500MB.",
+            });
+        }
+        return res.status(400).json({
+            success: false,
+            message: `Upload error: ${err.message}`,
+        });
+    }
+
+    if (err instanceof ApiError) {
+        return res.status(err.statusCode).json({
+            success: false,
+            message: err.message,
+            errors: err.errors || [],
+        });
+    }
+
+    console.error(err);
+    return res.status(500).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+    });
+});
+
 export { app };
