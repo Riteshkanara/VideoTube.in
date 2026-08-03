@@ -126,6 +126,33 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid video ID format");
     }
+    const addToWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const userId = req.user?._id;
+
+    if (!isValidObjectId(videoId)) {
+        throw new ApiError(400, "Invalid video id");
+    }
+
+    // Remove if already exists (so it moves to most-recent), then push fresh
+    await User.findByIdAndUpdate(userId, {
+        $pull: { watchHistory: videoId }
+    });
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        {
+            $push: { watchHistory: videoId }
+        },
+        { new: true }
+    );
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user.watchHistory, "Added to watch history"));
+});
+
+export { addToWatchHistory }; // add to your existing exports
 
     await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
 
