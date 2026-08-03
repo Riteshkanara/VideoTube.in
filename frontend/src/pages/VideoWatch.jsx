@@ -32,8 +32,7 @@ export default function VideoWatch() {
   useEffect(() => {
     if (videoId) loadVideo();
   }, [videoId]);
-
-  const loadVideo = async () => {
+const loadVideo = async () => {
     try {
       setLoading(true);
       const response = await videoAPI.getVideoById(videoId);
@@ -43,6 +42,13 @@ export default function VideoWatch() {
       setIsLiked(Boolean(response.isLiked));
       setIsSubscribed(Boolean(response.isSubscribed));
       setLikesCount(response.likesCount || 0);
+
+      // Track watch history (only if logged in, fire-and-forget)
+      if (isAuthenticated) {
+        videoAPI.addToWatchHistory(videoId).catch(err => {
+          console.log('Failed to update watch history:', err);
+        });
+      }
 
     } catch (error) {
       console.error('Failed to load video:', error);
