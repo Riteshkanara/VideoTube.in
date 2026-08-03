@@ -16,6 +16,8 @@ import Channel from './pages/Channel';
 import Playlists from './pages/Playlists';
 import Subscriptions from './pages/Subscriptions';
 import PlaylistDetail from './components/playlist/PlaylistDetail.jsx';
+import WatchHistory from './pages/WatchHistory';
+
 
 // Layout
 import Header from './components/common/Header';
@@ -123,6 +125,8 @@ function App() {
               <Home />
             </Layout>
           } />
+          
+          <Route path="/history" element={<WatchHistory />} />
 
           
           <Route path="/playlist/:playlistId" element={
