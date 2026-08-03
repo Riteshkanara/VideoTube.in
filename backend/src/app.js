@@ -25,7 +25,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.options(/.*/, cors(corsOptions))   // ✅ fixes preflight on mobile upload
+app.options(/.*/, cors(corsOptions))   // ✅ fixes preflight on mobile upload solved
 
 // NO app.options line needed
 
