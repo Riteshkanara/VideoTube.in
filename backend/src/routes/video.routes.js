@@ -5,7 +5,8 @@ import {
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus 
+    togglePublishStatus, 
+    addToWatchHistory
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -52,6 +53,8 @@ router.route("/:videoId/toggle-publish").patch(
     verifyJWT,
     togglePublishStatus
 );
+//for watchHistory route
+router.route("/history/:videoId").post(verifyJWT, addToWatchHistory);
 
 export default router;
 
