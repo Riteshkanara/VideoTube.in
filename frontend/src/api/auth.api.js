@@ -13,6 +13,11 @@ export const authAPI = {
   logout: async () => {
     return await api.post('/users/logout');
   },
+  // Get watch history
+  getWatchHistory: async () => {
+    const response = await api.get('/users/history');
+    return response.data;
+  },
 
   getCurrentUser: async () => {
     return await api.get('/users/current-user');
