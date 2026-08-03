@@ -16,6 +16,11 @@ export const videoAPI = {
     const response = await api.get(`/videos/${videoId}`);
     return response.data;
   },
+  // Add to watch history
+  addToWatchHistory: async (videoId) => {
+    const response = await api.post(`/videos/history/${videoId}`);
+    return response.data;
+  },
 
   // Upload video
   uploadVideo: async (formData) => {
