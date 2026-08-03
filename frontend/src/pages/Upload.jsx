@@ -87,7 +87,7 @@ export default function Upload() {
       
       toast.success('Video uploaded successfully!');
       setTimeout(() => {
-        navigate(`/watch/${response.data._id}`);
+        navigate(`/watch/${response._id}`);
       }, 1000);
     } catch (error) {
       toast.error(error.message || 'Upload failed');
