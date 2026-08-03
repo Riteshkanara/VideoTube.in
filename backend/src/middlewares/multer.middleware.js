@@ -1,6 +1,6 @@
 import multer from "multer"
 import path from "path"
-import crypto from "crypto"  // built-in Node, no install needed
+import crypto from "crypto"
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,5 +15,5 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
     storage,
-    limits: { fileSize: 100 * 1024 * 1024 }  // 100MB limit
+    limits: { fileSize: 500 * 1024 * 1024 }  // 500MB limit
 })
