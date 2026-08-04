@@ -105,17 +105,17 @@ VideoTube gives you:
 
 <div align="center">
 
-<!-- Replace these placeholders with real screenshots or GIFs from the live app -->
-
 | Home Feed | Watch Page |
 |:---:|:---:|
-| ![Home Feed](https://placehold.co/600x340/0f0f0f/ffffff?text=Home+Feed+Screenshot) | ![Watch Page](https://placehold.co/600x340/0f0f0f/ffffff?text=Watch+Page+Screenshot) |
+| ![Home Feed](assets/screenshots/home-feed.png) | ![Watch Page](assets/screenshots/watch-page.png) |
 
-| Channel Page | Community Tweet Feed |
+| Upload Video | Tweets / Community Feed |
 |:---:|:---:|
-| ![Channel Page](https://placehold.co/600x340/0f0f0f/ffffff?text=Channel+Page+Screenshot) | ![Community Feed](https://placehold.co/600x340/0f0f0f/ffffff?text=Community+Feed+Screenshot) |
+| ![Upload Video](assets/screenshots/upload-video.png) | ![Tweets Feed](assets/screenshots/tweets-feed.png) |
 
-<sub>📌 Placeholders — swap these image URLs with real screenshots/GIFs from <code>videotube-riteshkanara.vercel.app</code> before publishing.</sub>
+| Sign In | Create Account |
+|:---:|:---:|
+| ![Sign In](assets/screenshots/sign-in.png) | ![Create Account](assets/screenshots/create-account.png) |
 
 </div>
 
