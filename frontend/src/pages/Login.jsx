@@ -4,14 +4,20 @@ import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import useAuthStore from '../store/auth.store';
 import { authAPI } from '../api/auth.api';
+import Logo from '../components/common/Logo';
 
-const YouTubeIcon = () => (
-  <svg width="90" height="20" viewBox="0 0 90 20" fill="none">
-    <g>
-      <path d="M27.9 3.1c-.3-1.2-1.3-2.1-2.5-2.4C23.2 0.2 14 0.2 14 0.2s-9.2 0-11.4.5C1.4 1 0.4 1.9.1 3.1 -0.3 5.3-0.3 10-0.3 10s0 4.7.4 6.9c.3 1.2 1.3 2.1 2.5 2.4C4.8 19.8 14 19.8 14 19.8s9.2 0 11.4-.5c1.2-.3 2.2-1.2 2.5-2.4.4-2.2.4-6.9.4-6.9s0-4.7-.4-6.9z" fill="#FF0000" transform="translate(3,0)"/>
-      <path d="M14.5 14.2l7.6-4.2-7.6-4.2v8.4z" fill="#fff" transform="translate(-3.5,0)"/>
-    </g>
-    <text x="32" y="14" fontFamily="Roboto, Arial, sans-serif" fontSize="15" fontWeight="400" fill="#0f0f0f" letterSpacing="-0.3">VideoTube</text>
+const EyeOpenIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
+const EyeClosedIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+    <line x1="1" y1="1" x2="23" y2="23"/>
   </svg>
 );
 
@@ -54,18 +60,20 @@ export default function Login() {
 
   return (
     <div style={s.page}>
+      <div style={s.bgGlow} />
+
       <header style={s.header}>
-        <Link to="/" style={{ display: 'flex' }}>
-          <YouTubeIcon />
+        <Link to="/">
+          <Logo variant="premium" size="lg" />
         </Link>
       </header>
 
       <main style={s.main}>
         <div style={s.card}>
           <h1 style={s.heading}>Sign in</h1>
-          <p style={s.sub}>to continue to VideoTube</p>
+          <p style={s.sub}>Use your account to continue to VideoTube</p>
 
-          <form onSubmit={handleSubmit} noValidate style={{ marginTop: 32 }}>
+          <form onSubmit={handleSubmit} noValidate style={{ marginTop: 28 }}>
             <div style={s.field}>
               <input
                 id="vt-email"
@@ -75,8 +83,8 @@ export default function Login() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 style={s.input}
-                onFocus={e => { e.target.style.borderColor = '#1a73e8'; e.target.style.borderWidth = '2px'; }}
-                onBlur={e => { e.target.style.borderColor = '#dadce0'; e.target.style.borderWidth = '1px'; }}
+                onFocus={e => e.target.style.borderColor = '#e8192c'}
+                onBlur={e => e.target.style.borderColor = '#2a2a2a'}
                 required
               />
             </div>
@@ -91,47 +99,56 @@ export default function Login() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   style={s.input}
-                  onFocus={e => { e.target.style.borderColor = '#1a73e8'; e.target.style.borderWidth = '2px'; }}
-                  onBlur={e => { e.target.style.borderColor = '#dadce0'; e.target.style.borderWidth = '1px'; }}
+                  onFocus={e => e.target.style.borderColor = '#e8192c'}
+                  onBlur={e => e.target.style.borderColor = '#2a2a2a'}
                   required
                 />
+                <button
+                  type="button"
+                  style={s.eyeBtn}
+                  onClick={() => setShowPassword(v => !v)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                </button>
               </div>
-              <button
-                type="button"
-                style={s.showPasswordBtn}
-                onClick={() => setShowPassword(v => !v)}
-              >
-                {showPassword ? 'Hide password' : 'Show password'}
-              </button>
             </div>
 
-            <div style={s.divider} />
-
-            <div style={s.googleWrap}>
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => toast.error('Google login failed')}
-                useOneTap
-                theme="outline"
-                shape="rectangular"
-                width="360"
-              />
+            <div style={s.row}>
+              <button type="button" style={s.forgotBtn}>Forgot password?</button>
             </div>
 
-            <div style={s.footerRow}>
-              <Link to="/register" style={s.createLink}>Create account</Link>
-              <button type="submit" disabled={loading} style={s.primaryBtn}>
-                {loading ? 'Signing in…' : 'Next'}
-              </button>
-            </div>
+            <button type="submit" disabled={loading} style={s.primaryBtn}>
+              {loading ? 'Signing in…' : 'Sign in'}
+            </button>
           </form>
+
+          <div style={s.divider}>
+            <div style={s.dividerLine} />
+            <span style={s.dividerText}>or</span>
+            <div style={s.dividerLine} />
+          </div>
+
+          <div style={s.googleWrap}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => toast.error('Google login failed')}
+              useOneTap
+              theme="filled_black"
+              shape="pill"
+              width="340"
+            />
+          </div>
+
+          <p style={s.registerText}>
+            Don't have an account?{' '}
+            <Link to="/register" style={s.registerLink}>Create one now</Link>
+          </p>
         </div>
       </main>
 
       <footer style={s.footer}>
-        <select style={s.langSelect} defaultValue="en">
-          <option value="en">English (India)</option>
-        </select>
+        <span style={s.footerText}>© 2026 VideoTube</span>
         <div style={s.footerLinks}>
           <a href="#" style={s.footerLink}>Help</a>
           <a href="#" style={s.footerLink}>Privacy</a>
@@ -145,15 +162,24 @@ export default function Login() {
 const s = {
   page: {
     minHeight: '100vh',
-    background: '#fff',
+    background: '#0a0a0a',
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: "'Roboto', Arial, sans-serif",
+    position: 'relative',
+    overflow: 'hidden',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  },
+  bgGlow: {
+    position: 'absolute', inset: 0,
+    background: `radial-gradient(ellipse 50% 40% at 50% 0%, rgba(180,20,30,0.14) 0%, transparent 65%)`,
+    pointerEvents: 'none', zIndex: 0,
   },
   header: {
-    padding: '20px 24px',
+    position: 'relative', zIndex: 1,
+    padding: '24px 32px',
   },
   main: {
+    position: 'relative', zIndex: 1,
     flex: 1,
     display: 'flex',
     alignItems: 'center',
@@ -162,103 +188,81 @@ const s = {
   },
   card: {
     width: '100%',
-    maxWidth: 450,
-    border: '1px solid #dadce0',
-    borderRadius: 8,
-    padding: '48px 40px 36px',
+    maxWidth: 400,
+    background: '#111',
+    border: '0.5px solid #222',
+    borderRadius: 12,
+    padding: '40px 36px',
     boxSizing: 'border-box',
   },
   heading: {
-    fontSize: 24,
-    fontWeight: 400,
-    color: '#202124',
-    textAlign: 'center',
+    fontSize: 26,
+    fontWeight: 500,
+    color: '#fff',
+    letterSpacing: '-0.5px',
     margin: 0,
+    textAlign: 'center',
   },
   sub: {
-    fontSize: 16,
-    color: '#202124',
+    fontSize: 14,
+    color: '#777',
     textAlign: 'center',
     marginTop: 8,
     marginBottom: 0,
   },
-  field: { marginBottom: 16 },
+  field: { marginBottom: 14 },
   inputWrap: { position: 'relative' },
   input: {
     width: '100%',
-    padding: '13px 15px',
-    fontSize: 16,
-    color: '#202124',
-    border: '1px solid #dadce0',
-    borderRadius: 4,
-    outline: 'none',
-    boxSizing: 'border-box',
-    fontFamily: 'inherit',
-  },
-  showPasswordBtn: {
-    marginTop: 8,
-    background: 'none',
-    border: 'none',
-    color: '#1a73e8',
-    fontSize: 14,
-    fontWeight: 500,
-    cursor: 'pointer',
-    padding: 0,
-  },
-  divider: {
-    height: 1,
-    background: 'transparent',
-    margin: '24px 0 16px',
-  },
-  googleWrap: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: 32,
-  },
-  footerRow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  createLink: {
-    color: '#1a73e8',
-    fontSize: 14,
-    fontWeight: 500,
-    textDecoration: 'none',
-  },
-  primaryBtn: {
-    padding: '10px 24px',
-    background: '#1a73e8',
-    border: 'none',
-    borderRadius: 4,
+    padding: '13px 14px',
+    background: '#0f0f0f',
+    border: '0.5px solid #2a2a2a',
+    borderRadius: 8,
     color: '#fff',
     fontSize: 14,
-    fontWeight: 500,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
+    outline: 'none',
+    boxSizing: 'border-box',
+    transition: 'border-color 0.15s',
   },
+  eyeBtn: {
+    position: 'absolute', right: 10, top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'none', border: 'none',
+    color: '#555', cursor: 'pointer',
+    display: 'flex', padding: 2,
+  },
+  row: {
+    display: 'flex', justifyContent: 'flex-end',
+    marginBottom: 20,
+  },
+  forgotBtn: {
+    fontSize: 13, color: '#e8192c',
+    background: 'none', border: 'none',
+    cursor: 'pointer', opacity: 0.9,
+  },
+  primaryBtn: {
+    width: '100%', padding: '13px 0',
+    background: '#e8192c', border: 'none', borderRadius: 24,
+    color: '#fff', fontSize: 15, fontWeight: 500,
+    cursor: 'pointer', letterSpacing: '-0.2px',
+  },
+  divider: {
+    display: 'flex', alignItems: 'center', gap: 12,
+    margin: '24px 0 20px',
+  },
+  dividerLine: { flex: 1, height: 0.5, background: '#222' },
+  dividerText: { fontSize: 12, color: '#555' },
+  googleWrap: {
+    display: 'flex', justifyContent: 'center', marginBottom: 24,
+  },
+  registerText: { textAlign: 'center', fontSize: 13, color: '#555', margin: 0 },
+  registerLink: { color: '#e8192c', textDecoration: 'none', fontWeight: 500 },
   footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '16px 24px',
-    fontSize: 12,
-    color: '#5f6368',
+    position: 'relative', zIndex: 1,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '16px 32px', fontSize: 12, color: '#444',
   },
-  langSelect: {
-    fontSize: 12,
-    color: '#5f6368',
-    border: 'none',
-    background: 'transparent',
-    cursor: 'pointer',
-  },
-  footerLinks: {
-    display: 'flex',
-    gap: 24,
-  },
-  footerLink: {
-    color: '#5f6368',
-    textDecoration: 'none',
-    fontSize: 12,
-  },
+  footerText: { color: '#444' },
+  footerLinks: { display: 'flex', gap: 20 },
+  footerLink: { color: '#444', textDecoration: 'none' },
 };
