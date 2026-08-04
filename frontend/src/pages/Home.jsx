@@ -1,16 +1,53 @@
 import { useEffect, useState, useCallback } from 'react';
 import { videoAPI } from '../api/video.api';
 import VideoCard from '../components/video/VideoCard';
-import Loader from '../components/common/Loader';
 import toast from 'react-hot-toast';
 
-const FILTERS = ['All', 'Music', 'Gaming', 'News', 'Live', 'Science', 'Tech', 'Sports'];
+const FILTERS = [
+  { label: 'All',       value: 'all' },
+  { label: '🔥 Trending', value: 'trending' },
+  { label: 'Music',     value: 'music' },
+  { label: 'Gaming',    value: 'gaming' },
+  { label: 'Tech',      value: 'tech' },
+  { label: 'Science',   value: 'science' },
+  { label: 'News',      value: 'news' },
+  { label: 'Sports',    value: 'sports' },
+  { label: 'Live',      value: 'live' },
+  { label: 'Education', value: 'education' },
+];
 
+/* ─── Skeleton card ─────────────────────────────────────────────────────── */
+function SkeletonCard() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      <div style={{
+        aspectRatio: '16/9', borderRadius: 14,
+        background: 'linear-gradient(90deg, #141414 25%, #1c1c1c 50%, #141414 75%)',
+        backgroundSize: '200% 100%',
+        animation: 'skeletonPulse 1.5s infinite',
+      }} />
+      <div style={{ display: 'flex', gap: 10, padding: '11px 2px 0' }}>
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+          background: '#1a1a1a', animation: 'skeletonPulse 1.5s infinite',
+        }} />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 2 }}>
+          <div style={{ height: 13, borderRadius: 6, background: '#1a1a1a', animation: 'skeletonPulse 1.5s infinite' }} />
+          <div style={{ height: 13, borderRadius: 6, background: '#1a1a1a', width: '75%', animation: 'skeletonPulse 1.5s infinite' }} />
+          <div style={{ height: 11, borderRadius: 6, background: '#161616', width: '45%', animation: 'skeletonPulse 1.5s infinite' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main ──────────────────────────────────────────────────────────────── */
 export default function Home() {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [videos, setVideos]           = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [scrolled, setScrolled]       = useState(false);
 
   const loadVideos = useCallback(async () => {
     try {
@@ -31,191 +68,259 @@ export default function Home() {
 
   useEffect(() => { loadVideos(); }, [loadVideos]);
 
-  /* ── Loading skeleton ── */
-  if (loading) {
-    return (
-      <div>
-        {/* Filter chips skeleton */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap' }}>
-          {FILTERS.map(f => (
-            <div key={f} style={{
-              height: 34, width: f.length * 9 + 24,
-              borderRadius: 100, background: '#1a1a1a',
-            }} className="skeleton" />
-          ))}
-        </div>
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-        {/* Section heading skeleton */}
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ height: 28, width: 180, borderRadius: 8, marginBottom: 8 }} className="skeleton" />
-          <div style={{ height: 14, width: 140, borderRadius: 6 }} className="skeleton" />
-        </div>
-
-        {/* Grid skeleton */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-          gap: 24,
-        }}>
-          {[...Array(8)].map((_, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ aspectRatio: '16/9', borderRadius: 14 }} className="skeleton" />
-              <div style={{ display: 'flex', gap: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0 }} className="skeleton" />
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div style={{ height: 14, borderRadius: 6 }} className="skeleton" />
-                  <div style={{ height: 12, width: '60%', borderRadius: 6 }} className="skeleton" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  /* ── Error state ── */
+  /* ─── Error ─── */
   if (error) {
     return (
       <div style={{
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        minHeight: '60vh', gap: 16, textAlign: 'center',
+        minHeight: '60vh', gap: 20, textAlign: 'center',
       }}>
         <div style={{
-          width: 72, height: 72, borderRadius: '50%',
-          background: 'rgba(255,0,0,0.1)',
+          width: 80, height: 80, borderRadius: '50%',
+          background: 'rgba(255,34,34,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: '1px solid rgba(255,34,34,0.15)',
         }}>
-          <svg width="32" height="32" fill="none" stroke="#FF4444" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg width="34" height="34" fill="none" stroke="#FF4444" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>Something went wrong</h2>
-          <p style={{ color: '#666', fontSize: 14 }}>We couldn't load the videos</p>
+          <h2 style={{ fontSize: 19, fontWeight: 600, color: '#e0e0e0', marginBottom: 6 }}>
+            Something went wrong
+          </h2>
+          <p style={{ color: '#444', fontSize: 14 }}>We couldn't load your feed right now.</p>
         </div>
-        <button onClick={loadVideos} className="btn-primary">
-          Try Again
+        <button
+          onClick={loadVideos}
+          style={{
+            padding: '10px 24px', borderRadius: 10,
+            background: 'linear-gradient(135deg, #FF2222, #FF4D8D)',
+            border: 'none', color: '#fff', fontWeight: 600,
+            fontSize: 14, cursor: 'pointer',
+            boxShadow: '0 4px 16px rgba(255,34,34,0.3)',
+          }}
+        >
+          Try again
         </button>
       </div>
     );
   }
 
-  /* ── Empty state ── */
-  if (!Array.isArray(videos) || videos.length === 0) {
-    return (
-      <div style={{
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        minHeight: '60vh', gap: 16, textAlign: 'center',
-      }}>
-        <div style={{
-          width: 80, height: 80, borderRadius: '50%',
-          background: '#1a1a1a',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="36" height="36" fill="none" stroke="#444" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>No videos yet</h2>
-          <p style={{ color: '#666', fontSize: 14 }}>Be the first to upload!</p>
-        </div>
-        <button onClick={loadVideos} className="btn-secondary">Refresh</button>
-      </div>
-    );
-  }
+  /* ─── Empty ─── */
+  const isEmpty = !loading && (!Array.isArray(videos) || videos.length === 0);
 
-  /* ── Main feed ── */
   return (
-    <div>
-      {/* Category filter chips */}
-      <div style={{
-        display: 'flex', gap: 8, marginBottom: 28,
-        flexWrap: 'wrap',
-      }}>
-        {FILTERS.map(f => (
-          <button
-            key={f}
-            onClick={() => setActiveFilter(f)}
-            style={{
-              padding: '7px 16px',
-              borderRadius: 100,
-              border: activeFilter === f ? 'none' : '1px solid #2a2a2a',
-              background: activeFilter === f
-                ? 'linear-gradient(135deg, #FF0000, #FF4D8D)'
-                : '#1a1a1a',
-              color: activeFilter === f ? '#fff' : '#888',
-              fontSize: 13,
-              fontWeight: activeFilter === f ? 600 : 400,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              boxShadow: activeFilter === f ? '0 2px 12px rgba(255,0,0,0.3)' : 'none',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={e => {
-              if (activeFilter !== f) {
-                e.currentTarget.style.borderColor = '#444';
-                e.currentTarget.style.color = '#fff';
-              }
-            }}
-            onMouseLeave={e => {
-              if (activeFilter !== f) {
-                e.currentTarget.style.borderColor = '#2a2a2a';
-                e.currentTarget.style.color = '#888';
-              }
-            }}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      {/* Section heading */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{
-          fontSize: 26,
-          fontWeight: 800,
-          letterSpacing: -0.5,
-          marginBottom: 4,
-          background: 'linear-gradient(90deg, #FF0000, #FF4D8D)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-        }}>
-          Recommended
-        </h1>
-        <p style={{ color: '#555', fontSize: 13 }}>Videos picked for you</p>
-      </div>
-
-      {/* Video grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-        gap: 24,
-      }}>
-        {videos.map((video, index) => (
-          <div
-            key={video._id}
-            style={{
-              opacity: 0,
-              animation: 'slideUp 0.4s ease forwards',
-              animationDelay: `${index * 40}ms`,
-            }}
-          >
-            <VideoCard video={video} />
-          </div>
-        ))}
-      </div>
+    <div style={{ paddingBottom: 60 }}>
 
       <style>{`
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(16px); }
+        @keyframes skeletonPulse {
+          0%, 100% { background-position: 200% 0; }
+          50%       { background-position: -200% 0; }
+        }
+        @keyframes heroIn {
+          from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes filterIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .filter-chip { transition: all 0.18s ease; }
+        .filter-chip:hover { transform: translateY(-1px); }
+        .video-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 28px 24px;
+        }
+        @media (max-width: 640px) {
+          .video-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .video-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
       `}</style>
+
+      {/* ─── Hero strip ─── */}
+      <div style={{
+        marginBottom: 28,
+        padding: '22px 0 24px',
+        borderBottom: '1px solid #141414',
+        animation: 'heroIn 0.4s ease forwards',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 4 }}>
+          <div>
+            <p style={{
+              margin: '0 0 4px',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: '#FF2222',
+            }}>
+              For you
+            </p>
+            <h1 style={{
+              margin: 0,
+              fontSize: 'clamp(22px, 3vw, 28px)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              color: '#f0f0f0',
+              lineHeight: 1.15,
+            }}>
+              Your feed
+            </h1>
+          </div>
+
+          {/* Live dot */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '6px 12px',
+            borderRadius: 100,
+            background: 'rgba(255,34,34,0.08)',
+            border: '1px solid rgba(255,34,34,0.14)',
+          }}>
+            <span style={{
+              width: 7, height: 7, borderRadius: '50%',
+              background: '#FF2222',
+              animation: 'livePulse 2s infinite',
+              display: 'inline-block',
+            }} />
+            <span style={{ fontSize: 11.5, fontWeight: 600, color: '#FF4444', letterSpacing: '0.04em' }}>
+              LIVE
+            </span>
+          </div>
+        </div>
+
+        <style>{`
+          @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,34,34,0.5); }
+            50%       { box-shadow: 0 0 0 5px rgba(255,34,34,0); }
+          }
+        `}</style>
+      </div>
+
+      {/* ─── Filter chips ─── */}
+      <div style={{
+        display: 'flex',
+        gap: 8,
+        marginBottom: 32,
+        overflowX: 'auto',
+        paddingBottom: 4,
+        scrollbarWidth: 'none',
+        animation: 'filterIn 0.4s ease 0.1s both',
+      }}>
+        <style>{`.filter-bar::-webkit-scrollbar { display: none; }`}</style>
+        {FILTERS.map((f, i) => {
+          const active = activeFilter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => setActiveFilter(f.value)}
+              className="filter-chip"
+              style={{
+                flexShrink: 0,
+                padding: '7px 16px',
+                borderRadius: 100,
+                border: active
+                  ? '1px solid rgba(255,34,34,0.35)'
+                  : '1px solid #1e1e1e',
+                background: active
+                  ? 'linear-gradient(135deg, rgba(255,34,34,0.2), rgba(255,77,141,0.14))'
+                  : '#141414',
+                color: active ? '#fff' : '#4a4a4a',
+                fontSize: 13,
+                fontWeight: active ? 600 : 400,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                boxShadow: active ? '0 2px 16px rgba(255,34,34,0.2)' : 'none',
+                animation: `filterIn 0.3s ease ${i * 30}ms both`,
+              }}
+            >
+              {f.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ─── Empty state ─── */}
+      {isEmpty && (
+        <div style={{
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          minHeight: '50vh', gap: 20, textAlign: 'center',
+          animation: 'heroIn 0.4s ease forwards',
+        }}>
+          <div style={{
+            width: 88, height: 88, borderRadius: '50%',
+            background: '#111',
+            border: '1px solid #1e1e1e',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <svg width="38" height="38" fill="none" stroke="#2a2a2a" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 style={{ fontSize: 18, fontWeight: 600, color: '#444', marginBottom: 6 }}>
+              No videos yet
+            </h2>
+            <p style={{ color: '#2a2a2a', fontSize: 13.5 }}>
+              Be the first to upload something.
+            </p>
+          </div>
+          <button
+            onClick={loadVideos}
+            style={{
+              padding: '9px 22px', borderRadius: 10,
+              background: '#1a1a1a',
+              border: '1px solid #222',
+              color: '#555', fontWeight: 500,
+              fontSize: 13.5, cursor: 'pointer',
+            }}
+          >
+            Refresh
+          </button>
+        </div>
+      )}
+
+      {/* ─── Video grid ─── */}
+      <div className="video-grid">
+        {loading
+          ? [...Array(12)].map((_, i) => <SkeletonCard key={i} />)
+          : videos.map((video, i) => (
+              <VideoCard key={video._id} video={video} index={i} />
+            ))
+        }
+      </div>
+
+      {/* ─── End of feed ─── */}
+      {!loading && videos.length > 0 && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 16,
+          marginTop: 56, opacity: 0.35,
+        }}>
+          <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
+          <span style={{ fontSize: 12, color: '#333', fontWeight: 500, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+            You're all caught up
+          </span>
+          <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
+        </div>
+      )}
     </div>
   );
 }
