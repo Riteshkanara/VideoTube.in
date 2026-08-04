@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import useAuthStore from '../../store/auth.store.js';
 import { authAPI } from '../../api/auth.api';
 import Avatar from './Avatar';
+import Logo from './Logo';
 import toast from 'react-hot-toast';
 
 export default function Header({ onMenuClick }) {
@@ -59,25 +60,8 @@ export default function Header({ onMenuClick }) {
           </svg>
         </button>
 
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
-          <div style={{
-            width: 34, height: 34,
-            borderRadius: 9,
-            background: 'linear-gradient(135deg, #FF0000, #FF4D8D)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 14px rgba(255,0,0,0.35)',
-            flexShrink: 0,
-          }}>
-            <svg width="15" height="15" fill="white" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <span className="logo-text" style={{
-            fontWeight: 800, fontSize: 17,
-            letterSpacing: -0.5, color: '#fff',
-          }}>
-            VideoTube
-          </span>
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }} className="header-logo">
+          <Logo variant="premium" size="sm" />
         </Link>
       </div>
 
@@ -349,7 +333,7 @@ export default function Header({ onMenuClick }) {
           .hamburger-btn { display: flex !important; }
         }
         @media (max-width: 400px) {
-          .logo-text { display: none !important; }
+          .header-logo span { display: none !important; }
         }
         .user-menu:hover .dropdown-menu {
           opacity: 1 !important;
