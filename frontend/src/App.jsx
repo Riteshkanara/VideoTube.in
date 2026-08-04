@@ -126,7 +126,13 @@ function App() {
             </Layout>
           } />
           
-          <Route path="/history" element={<WatchHistory />} />
+          <Route path="/history" element={
+  <Layout>
+    <ProtectedRoute>
+      <WatchHistory />
+    </ProtectedRoute>
+  </Layout>
+} />
 
           
           <Route path="/playlist/:playlistId" element={
