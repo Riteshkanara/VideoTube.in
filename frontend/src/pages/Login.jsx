@@ -4,32 +4,16 @@ import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import useAuthStore from '../store/auth.store';
 import { authAPI } from '../api/auth.api';
-import Logo from '../components/common/Logo';
 
-// ── Inline SVG icons (no extra deps) ─────────────────────────────────────────
-const MailIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-    <polyline points="22,6 12,13 2,6"/>
+const YouTubeIcon = () => (
+  <svg width="90" height="20" viewBox="0 0 90 20" fill="none">
+    <g>
+      <path d="M27.9 3.1c-.3-1.2-1.3-2.1-2.5-2.4C23.2 0.2 14 0.2 14 0.2s-9.2 0-11.4.5C1.4 1 0.4 1.9.1 3.1 -0.3 5.3-0.3 10-0.3 10s0 4.7.4 6.9c.3 1.2 1.3 2.1 2.5 2.4C4.8 19.8 14 19.8 14 19.8s9.2 0 11.4-.5c1.2-.3 2.2-1.2 2.5-2.4.4-2.2.4-6.9.4-6.9s0-4.7-.4-6.9z" fill="#FF0000" transform="translate(3,0)"/>
+      <path d="M14.5 14.2l7.6-4.2-7.6-4.2v8.4z" fill="#fff" transform="translate(-3.5,0)"/>
+    </g>
+    <text x="32" y="14" fontFamily="Roboto, Arial, sans-serif" fontSize="15" fontWeight="400" fill="#0f0f0f" letterSpacing="-0.3">VideoTube</text>
   </svg>
 );
-
-const EyeOpenIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
-  </svg>
-);
-
-const EyeClosedIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
-    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
-    <line x1="1" y1="1" x2="23" y2="23"/>
-  </svg>
-);
-
-const TILE_ICONS = ['🎬','🎵','🌍','🎙️','🔭','📸','🎮','🏔️','🎧','📡','🌌','🎤'];
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -38,7 +22,6 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
 
-  // ── All your original logic — untouched ──────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -68,244 +51,214 @@ export default function Login() {
       setLoading(false);
     }
   };
-  // ─────────────────────────────────────────────────────────────────────────
 
   return (
     <div style={s.page}>
-      {/* Ambient red glow */}
-      <div style={s.bgGlow} />
+      <header style={s.header}>
+        <Link to="/" style={{ display: 'flex' }}>
+          <YouTubeIcon />
+        </Link>
+      </header>
 
-      {/* Cinematic tile grid — right side */}
-      <div style={s.filmstrip} aria-hidden="true">
-        <div style={s.tileGrid}>
-          {TILE_ICONS.map((icon, i) => (
-            <div key={i} style={{
-              ...s.tile,
-              background: i % 3 === 0 ? '#1c0e0e' : i % 3 === 1 ? '#111' : '#160d0d',
-            }}>
-              <span style={s.tileIcon}>{icon}</span>
-            </div>
-          ))}
-        </div>
-        <div style={s.fadeLeft} />
-      </div>
+      <main style={s.main}>
+        <div style={s.card}>
+          <h1 style={s.heading}>Sign in</h1>
+          <p style={s.sub}>to continue to VideoTube</p>
 
-      {/* Left panel */}
-      <main style={s.left}>
-        {/* Logo */}
-        <div style={s.logoRow}>
-          <Link to="/">
-            <Logo variant="premium" size="xl" />
-          </Link>
-        </div>
-
-        <h1 style={s.heading}>Welcome back</h1>
-        <p style={s.sub}>Sign in to continue watching</p>
-
-        {/* Email + password form */}
-        <form onSubmit={handleSubmit} noValidate>
-          {/* Email */}
-          <div style={s.field}>
-            <label style={s.label} htmlFor="vt-email">Email address</label>
-            <div style={s.inputWrap}>
+          <form onSubmit={handleSubmit} noValidate style={{ marginTop: 32 }}>
+            <div style={s.field}>
               <input
                 id="vt-email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="Email"
                 autoComplete="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 style={s.input}
-                onFocus={e => e.target.style.borderColor = 'rgba(232,25,44,0.45)'}
-                onBlur={e => e.target.style.borderColor = '#222'}
+                onFocus={e => { e.target.style.borderColor = '#1a73e8'; e.target.style.borderWidth = '2px'; }}
+                onBlur={e => { e.target.style.borderColor = '#dadce0'; e.target.style.borderWidth = '1px'; }}
                 required
               />
-              <span style={s.inputIcon}><MailIcon /></span>
             </div>
-          </div>
 
-          {/* Password */}
-          <div style={s.field}>
-            <label style={s.label} htmlFor="vt-password">Password</label>
-            <div style={s.inputWrap}>
-              <input
-                id="vt-password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                style={s.input}
-                onFocus={e => e.target.style.borderColor = 'rgba(232,25,44,0.45)'}
-                onBlur={e => e.target.style.borderColor = '#222'}
-                required
-              />
+            <div style={s.field}>
+              <div style={s.inputWrap}>
+                <input
+                  id="vt-password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  style={s.input}
+                  onFocus={e => { e.target.style.borderColor = '#1a73e8'; e.target.style.borderWidth = '2px'; }}
+                  onBlur={e => { e.target.style.borderColor = '#dadce0'; e.target.style.borderWidth = '1px'; }}
+                  required
+                />
+              </div>
               <button
                 type="button"
-                style={s.eyeBtn}
+                style={s.showPasswordBtn}
                 onClick={() => setShowPassword(v => !v)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                {showPassword ? 'Hide password' : 'Show password'}
               </button>
             </div>
-          </div>
 
-          {/* Remember + forgot */}
-          <div style={s.row}>
-            <label style={s.rememberLabel}>
-              <input type="checkbox" style={s.checkbox} />
-              Remember me
-            </label>
-            <button type="button" style={s.forgotBtn}>Forgot password?</button>
-          </div>
+            <div style={s.divider} />
 
-          {/* Submit */}
-          <button type="submit" disabled={loading} style={s.primaryBtn}>
-            {loading ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
+            <div style={s.googleWrap}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => toast.error('Google login failed')}
+                useOneTap
+                theme="outline"
+                shape="rectangular"
+                width="360"
+              />
+            </div>
 
-        {/* Divider */}
-        <div style={s.divider}>
-          <div style={s.dividerLine} />
-          <span style={s.dividerText}>or continue with</span>
-          <div style={s.dividerLine} />
+            <div style={s.footerRow}>
+              <Link to="/register" style={s.createLink}>Create account</Link>
+              <button type="submit" disabled={loading} style={s.primaryBtn}>
+                {loading ? 'Signing in…' : 'Next'}
+              </button>
+            </div>
+          </form>
         </div>
-
-        {/* Google login — your original component, unchanged */}
-        <div style={s.googleWrap}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => toast.error('Google login failed')}
-            useOneTap
-            theme="filled_black"
-            shape="pill"
-            width="320"
-          />
-        </div>
-
-        <p style={s.registerText}>
-          Don't have an account?{' '}
-          <Link to="/register" style={s.registerLink}>Create one now</Link>
-        </p>
       </main>
+
+      <footer style={s.footer}>
+        <select style={s.langSelect} defaultValue="en">
+          <option value="en">English (India)</option>
+        </select>
+        <div style={s.footerLinks}>
+          <a href="#" style={s.footerLink}>Help</a>
+          <a href="#" style={s.footerLink}>Privacy</a>
+          <a href="#" style={s.footerLink}>Terms</a>
+        </div>
+      </footer>
     </div>
   );
 }
 
-// ── Styles ────────────────────────────────────────────────────────────────────
 const s = {
   page: {
     minHeight: '100vh',
-    background: '#0a0a0a',
+    background: '#fff',
     display: 'flex',
-    position: 'relative',
-    overflow: 'hidden',
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    flexDirection: 'column',
+    fontFamily: "'Roboto', Arial, sans-serif",
   },
-  bgGlow: {
-    position: 'absolute', inset: 0,
-    background: `
-      radial-gradient(ellipse 60% 50% at 75% 50%, rgba(180,20,30,0.18) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(120,10,20,0.12) 0%, transparent 60%)
-    `,
-    pointerEvents: 'none', zIndex: 0,
+  header: {
+    padding: '20px 24px',
   },
-  filmstrip: {
-    position: 'absolute', right: 0, top: 0, bottom: 0,
-    width: '52%', overflow: 'hidden', zIndex: 0,
+  main: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px',
   },
-  tileGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridTemplateRows: 'repeat(4, 1fr)',
-    gap: '4px', height: '100%',
-    opacity: 0.18,
-    transform: 'skewY(-4deg) scale(1.1)',
-  },
-  tile: {
-    borderRadius: '4px',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  tileIcon: {
-    fontSize: '28px',
-    filter: 'grayscale(1) brightness(0.3)',
-  },
-  fadeLeft: {
-    position: 'absolute', inset: 0,
-    background: 'linear-gradient(to right, #0a0a0a 25%, transparent 70%)',
-    pointerEvents: 'none',
-  },
-  left: {
-    position: 'relative', zIndex: 1,
-    width: 'min(460px, 100%)',
-    display: 'flex', flexDirection: 'column', justifyContent: 'center',
-    padding: '52px clamp(24px, 5vw, 48px)',
-  },
-  logoRow: {
-    marginBottom: '48px',
+  card: {
+    width: '100%',
+    maxWidth: 450,
+    border: '1px solid #dadce0',
+    borderRadius: 8,
+    padding: '48px 40px 36px',
+    boxSizing: 'border-box',
   },
   heading: {
-    fontSize: 'clamp(24px, 4vw, 30px)',
-    fontWeight: 500, color: '#fff',
-    letterSpacing: '-0.5px', marginBottom: '6px',
+    fontSize: 24,
+    fontWeight: 400,
+    color: '#202124',
+    textAlign: 'center',
+    margin: 0,
   },
   sub: {
-    fontSize: '14px', color: '#666', marginBottom: '32px',
+    fontSize: 16,
+    color: '#202124',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 0,
   },
-  field: { marginBottom: '16px' },
-  label: {
-    display: 'block', fontSize: '11px', color: '#555',
-    marginBottom: '6px', letterSpacing: '0.5px', textTransform: 'uppercase',
-  },
+  field: { marginBottom: 16 },
   inputWrap: { position: 'relative' },
   input: {
-    width: '100%', padding: '11px 40px 11px 14px',
-    background: '#0f0f0f', border: '0.5px solid #222',
-    borderRadius: '8px', color: '#fff', fontSize: '14px',
-    outline: 'none', boxSizing: 'border-box',
-    transition: 'border-color 0.15s',
+    width: '100%',
+    padding: '13px 15px',
+    fontSize: 16,
+    color: '#202124',
+    border: '1px solid #dadce0',
+    borderRadius: 4,
+    outline: 'none',
+    boxSizing: 'border-box',
+    fontFamily: 'inherit',
   },
-  inputIcon: {
-    position: 'absolute', right: '12px', top: '50%',
-    transform: 'translateY(-50%)', color: '#333',
-    pointerEvents: 'none', display: 'flex',
-  },
-  eyeBtn: {
-    position: 'absolute', right: '10px', top: '50%',
-    transform: 'translateY(-50%)', background: 'none',
-    border: 'none', color: '#444', cursor: 'pointer',
-    display: 'flex', padding: '2px',
-  },
-  row: {
-    display: 'flex', alignItems: 'center',
-    justifyContent: 'space-between', marginBottom: '24px',
-  },
-  rememberLabel: {
-    display: 'flex', alignItems: 'center', gap: '7px',
-    fontSize: '13px', color: '#555', cursor: 'pointer',
-  },
-  checkbox: { width: '14px', height: '14px', accentColor: '#e8192c', cursor: 'pointer' },
-  forgotBtn: {
-    fontSize: '13px', color: '#e8192c', background: 'none',
-    border: 'none', cursor: 'pointer', opacity: 0.85,
-  },
-  primaryBtn: {
-    width: '100%', padding: '13px 0',
-    background: '#e8192c', border: 'none', borderRadius: '8px',
-    color: '#fff', fontSize: '15px', fontWeight: 500,
-    cursor: 'pointer', marginBottom: '24px', letterSpacing: '-0.2px',
-    opacity: 1, transition: 'opacity 0.15s',
+  showPasswordBtn: {
+    marginTop: 8,
+    background: 'none',
+    border: 'none',
+    color: '#1a73e8',
+    fontSize: 14,
+    fontWeight: 500,
+    cursor: 'pointer',
+    padding: 0,
   },
   divider: {
-    display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px',
+    height: 1,
+    background: 'transparent',
+    margin: '24px 0 16px',
   },
-  dividerLine: { flex: 1, height: '0.5px', background: '#1e1e1e' },
-  dividerText: { fontSize: '12px', color: '#444', whiteSpace: 'nowrap' },
   googleWrap: {
-    display: 'flex', justifyContent: 'center', marginBottom: '28px',
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: 32,
   },
-  registerText: { textAlign: 'center', fontSize: '13px', color: '#444' },
-  registerLink: { color: '#e8192c', textDecoration: 'none', opacity: 0.85 },
+  footerRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  createLink: {
+    color: '#1a73e8',
+    fontSize: 14,
+    fontWeight: 500,
+    textDecoration: 'none',
+  },
+  primaryBtn: {
+    padding: '10px 24px',
+    background: '#1a73e8',
+    border: 'none',
+    borderRadius: 4,
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 500,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+  },
+  footer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '16px 24px',
+    fontSize: 12,
+    color: '#5f6368',
+  },
+  langSelect: {
+    fontSize: 12,
+    color: '#5f6368',
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+  },
+  footerLinks: {
+    display: 'flex',
+    gap: 24,
+  },
+  footerLink: {
+    color: '#5f6368',
+    textDecoration: 'none',
+    fontSize: 12,
+  },
 };
