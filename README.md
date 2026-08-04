@@ -105,17 +105,32 @@ VideoTube gives you:
 
 <div align="center">
 
+| Sign In | Create Account |
+|:---:|:---:|
+| ![Sign In](screenshots/sign-in.png) | ![Create Account](screenshots/create-account.png) |
+
 | Home Feed | Watch Page |
 |:---:|:---:|
-| ![Home Feed](assets/screenshots/home-feed.png) | ![Watch Page](assets/screenshots/watch-page.png) |
+| ![Home Feed](screenshots/home-feed.png) | ![Watch Page](screenshots/watch-page.png) |
 
 | Upload Video | Tweets / Community Feed |
 |:---:|:---:|
-| ![Upload Video](assets/screenshots/upload-video.png) | ![Tweets Feed](assets/screenshots/tweets-feed.png) |
+| ![Upload Video](screenshots/upload-video.png) | ![Tweets Feed](screenshots/tweets-feed.png) |
 
-| Sign In | Create Account |
+<!-- Add more screenshots below by copying a row block above and swapping the filenames.
+     Each row is: a two-column table header with your two captions,
+     then a row with two ![Caption](screenshots/filename.png) images.
+     Example — uncomment and edit:
+
+| Channel Page | Video Player Fullscreen |
 |:---:|:---:|
-| ![Sign In](assets/screenshots/sign-in.png) | ![Create Account](assets/screenshots/create-account.png) |
+| ![Channel Page](screenshots/channel-page.png) | ![Fullscreen Player](screenshots/fullscreen-player.png) |
+
+| Liked Videos | Subscriptions |
+|:---:|:---:|
+| ![Liked Videos](screenshots/liked-videos.png) | ![Subscriptions](screenshots/subscriptions.png) |
+
+-->
 
 </div>
 
