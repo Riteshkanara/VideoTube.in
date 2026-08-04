@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { userAPI } from '../api/user.api.js';
+import { authAPI } from '../api/auth.api.js';
 import Avatar from '../components/common/Avatar';
 import Loader from '../components/common/Loader';
 import { formatViews } from '../utils/formatViews';
