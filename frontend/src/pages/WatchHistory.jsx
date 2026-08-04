@@ -18,7 +18,7 @@ export default function WatchHistory() {
   const loadHistory = async () => {
     try {
       setLoading(true);
-      const response = await userAPI.getWatchHistory();
+      const response = await authAPI.getWatchHistory();
       setHistory(response || []);
     } catch (error) {
       console.error('Failed to load watch history:', error);
