@@ -35,7 +35,7 @@ function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    const ping = () => fetch(`${import.meta.env.VITE_API_URL}/api/v1/healthcheck`)
+    const ping = () => fetch(`${import.meta.env.VITE_API_URL}/healthcheck`)
     ping()
     const interval = setInterval(ping, 10 * 60 * 1000)
     return () => clearInterval(interval)
