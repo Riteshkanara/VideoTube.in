@@ -1,6 +1,3 @@
-// Logo.jsx — Custom SVG mark + wordmark
-// Place this in: src/components/common/Logo.jsx
-
 const SIZES = {
   sm: { icon: 28, font: 16, gap: 8 },
   md: { icon: 34, font: 19, gap: 9 },
@@ -14,7 +11,10 @@ function PlayMark({ pixel, glow }) {
       width={pixel}
       height={pixel}
       viewBox="0 0 40 40"
-      style={{ display: 'block', filter: glow ? 'drop-shadow(0 2px 10px rgba(232,25,44,0.45))' : 'none' }}
+      style={{
+        display: 'block',
+        filter: glow ? 'drop-shadow(0 2px 10px rgba(232,25,44,0.45))' : 'none',
+      }}
     >
       <defs>
         <linearGradient id="vtGrad" x1="0" y1="0" x2="1" y2="1">
@@ -24,7 +24,10 @@ function PlayMark({ pixel, glow }) {
       </defs>
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#vtGrad)" />
       <rect x="1" y="1" width="38" height="38" rx="11" fill="white" fillOpacity="0.06" />
-      <path d="M16.5 13.2c0-1.1 1.2-1.78 2.16-1.22l10.4 6.1c.95.56.95 1.94 0 2.5l-10.4 6.1c-.96.56-2.16-.12-2.16-1.22V13.2z" fill="#fff" />
+      <path
+        d="M16.5 13.2c0-1.1 1.2-1.78 2.16-1.22l10.4 6.1c.95.56.95 1.94 0 2.5l-10.4 6.1c-.96.56-2.16-.12-2.16-1.22V13.2z"
+        fill="#fff"
+      />
     </svg>
   );
 }
@@ -48,23 +51,17 @@ export default function Logo({ variant = 'default', size = 'md', showText = true
       {!iconOnly && (
         <span
           style={{
+            fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
             fontSize: cfg.font,
-            fontWeight: 700,
-            letterSpacing: '-0.03em',
-            color: '#fff',
-            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            letterSpacing: '-0.025em',
             lineHeight: 1,
             whiteSpace: 'nowrap',
           }}
         >
-          Video<span style={{ color: '#e8192c' }}>Tube</span>
+          <span style={{ color: '#e8e8e8', fontWeight: 500 }}>Video</span>
+          <span style={{ color: '#FF2222', fontWeight: 800 }}>Tube</span>
         </span>
       )}
     </div>
   );
 }
-
-// Usage:
-// <Logo variant="premium" size="lg" />       -> mark + wordmark, subtle glow
-// <Logo variant="minimal" size="sm" />        -> mark only
-// <Logo size="md" showText={false} />         -> mark only, any variant
